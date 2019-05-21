@@ -1,0 +1,65 @@
+# birth parity probabilities
+# lines beginning with '@' force the beginning of a new subtable
+# the seven subtables are queried using `floor((mother_age-15)/5)`:
+# ages 0-19 gives index 0 (sub-table 1)
+# ages 20-24 gives index 1 (sub-table 2)
+# ages 25-29 gives index 2 (sub-table 3)
+# ages 30-34 gives index 3 (sub-table 4)
+# ages 35-39 gives index 4 (sub-table 5)
+# ages 40-44 gives index 5 (sub-table 6)
+# ages 45-50 gives index 6 (sub-table 7)
+# the subtable gives the probability of a mother in an age-range of having 0-5 (row values) of children at a particular
+# point in time. Note that x=0 actually increases for the 45-50, compared to other groups. Parity should increase over
+# age, as it captures the total number of children, unless child-mortality kicks in after a while.
+# To assign children to mothers, one would sample an mother's age, then the number of children for that
+# mother based on the parity table. All females at the age with one less child are then candidates.
+# Or, if a mother's age is first drawn based on fertility age probabilities, then this should be the probability that
+# a mother will have a child given that she has already had `x` children.
+0.856 0
+0.125 1
+0.017 2
+0.001 3
+0.001 4
+0 5
+@
+0.59 0
+0.296 1
+0.088 2
+0.02 3
+0.005 4
+0.001 5
+@ 
+0.502 0
+0.315 1
+0.122 2
+0.042 3
+0.014 4
+0.005 5
+@ 
+0.385 0
+0.368 1
+0.162 2
+0.053 3
+0.02 4
+0.012 5
+@ 
+0.283 0
+0.372 1
+0.21 2
+0.08 3
+0.033 4
+0.022 5
+@ 
+0.274 0
+0.338 1
+0.2 2
+0.093 3
+0.051 4
+0.044 5
+@ 
+0.348 0
+0.262 1
+0.135 2
+0.086 3
+0.079 4
+0.09 5
