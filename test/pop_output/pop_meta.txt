@@ -1,0 +1,14 @@
+The following variables are present in population output files (pop_...csv). The files are csv.
+
+year 		<int>	simulation year of population
+person_id 	<id> 	id of person, not unique since person is found over multiple years
+age 		<int> 	age of person
+adam_eve 	<int> 	whether person was part of initial population,
+children_id 	<str> 	';' separated string of person ids, each being a child of person
+divorced 	<bool> 	True or False
+father_id	<id> 	person id of father, if any
+mother_id	<id> 	person id of mother, if any
+household_id	<id> 	id of household to which person belongs
+partner_id	<id> 	person id of partner, if any
+sex		<int> 	gender {0:male, 1:female}
+with_parents	<bool> 	True if person still stays with parents, False otherwise
