@@ -163,14 +163,17 @@ class Simulation(object):
 #        if ind.divorced and ind.deps: couple_prob *= 0.5
 
         # DEATH / BIRTH: 
+        #TODO immediate: prevent birth from automatically occuring at death
         if self.rng.random() > exp(-self.death_rates[ind.sex][ind.age][index]):
             death = ind
             mother = ind
+            #TODO immediate: subject to burn-period flag
             while mother is ind:    # make sure dead individual isn't selected as mother!
                 mother = self.choose_mother(index)
             birth = self.update_death_birth(t, ind, mother)
 
         # COUPLE FORMATION:
+        # TODO ejw: check 60 year assumption
         elif self.params['couple_age'] < ind.age < 60 \
                 and not ind.partner \
                 and self.rng.random() < couple_prob:
@@ -178,7 +181,13 @@ class Simulation(object):
             if partner:
                 self.P.form_couple(t, ind, partner)
 
+        # TODO immediate: add new component to check if women have children based on age and fertility rates
+        # TODO immediate: subject to not burn-period flag
+        # TODO immediate: check population parity against parity tables
+        # if ... : then birth
+
         # LEAVING HOME:
+        # TODO ejw: not sure where to find this
         elif ind.age > self.params['leaving_age'] \
                 and ind.with_parents \
                 and not ind.partner \
@@ -186,12 +195,17 @@ class Simulation(object):
             self.P.leave_home(t, ind)
 
         # DIVORCE:
+        # TODO ejw: to be updated with Singapore statistics check and find out why max age is hard-coded instead of using the parameter
         elif self.params['divorce_age'] < ind.age < 50 \
                 and ind.partner \
                 and self.rng.random() < self.params_adj['divorce_probs'][index]:
             self.P.separate_couple(t, ind)
 
         # ELSE: individual has a quiet year...
+
+        # TODO: bring in marriage based fertility rates
+        # TODO: bring race
+        # TODO: bring in income/educational levels
         return death, birth 
 
 
@@ -256,10 +270,13 @@ class Simulation(object):
         :returns: partner if successful, otherwise None.
         """
 
+        # sex 0 means mail and 1 means female
         mean_age = ind.age+self.params['partner_age_diff'] \
                 if ind.sex == 0 else ind.age-self.params['partner_age_diff']
         tgt_age = 0
         while tgt_age < self.params['min_partner_age']:
+            # TODO ejw: allow for different kind of age difference distributions
+            # TODO ejw: update to account for race
             tgt_age = int(self.rng.gauss(mean_age, self.params['partner_age_sd']))
             tgt_set = self.P.individuals_by_age(tgt_age, tgt_age)
             candidates = [x \
@@ -339,6 +356,7 @@ class Simulation(object):
             hh_id = self.rng.choice(list(self.P.groups['household'].keys()))
             imm_count += len(self.P.groups['household'][hh_id])
             source_hh_ids.append(hh_id)
+
         for hh_id in source_hh_ids:
             new_hh_id = self.P.duplicate_household(t, hh_id)
             immigrants.extend(self.P.groups['household'][new_hh_id])
