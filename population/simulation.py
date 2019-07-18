@@ -107,6 +107,9 @@ class Simulation(object):
         self.fertility_parity_probs = load_probs_new(os.path.join(
             self.params['resource_prefix'],
             self.params['fertility_parity_probs']))
+        self.fertility_age_rates = self.parse_age_rates(os.path.join(
+            self.params['resource_prefix'],
+            self.params['fertility_age_rates']), annual_factor, False)
 
         ### load and scale leave/couple/divorce and growth rates
         if self.params['dyn_rates']:
@@ -151,7 +154,7 @@ class Simulation(object):
                 self.params['imm_rate'], self.params['t_dur'])]
 
 
-    def update_individual_demo(self, t, ind, index=0):
+    def update_individual_demo(self, t, ind, index=0, burn_flag=False):
         """
         Update individual ind; check for death, couple formation, leaving home
         or divorce, as possible and appropriate.
@@ -163,50 +166,61 @@ class Simulation(object):
 #        if ind.divorced and ind.deps: couple_prob *= 0.5
 
         # DEATH / BIRTH: 
-        #TODO immediate: prevent birth from automatically occuring at death
+        # TODO immediate: prevent birth from automatically occuring at death # NOTE ben: done
         if self.rng.random() > exp(-self.death_rates[ind.sex][ind.age][index]):
             death = ind
-            mother = ind
-            #TODO immediate: subject to burn-period flag
-            while mother is ind:    # make sure dead individual isn't selected as mother!
-                mother = self.choose_mother(index)
-            birth = self.update_death_birth(t, ind, mother)
+            # TODO immediate: subject to burn-period flag # NOTE ben: done
+            if burn_flag:
+                mother = ind
+                while mother is ind:    # make sure dead individual isn't selected as mother!
+                    mother = self.choose_mother(index)
+                birth = self.update_death_birth(t, ind, mother)
+            else:
+                birth = self.update_death_birth(t, ind, False)
 
         # COUPLE FORMATION:
-        # TODO ejw: check 60 year assumption
-        elif self.params['couple_age'] < ind.age < 60 \
+        # TODO ejw: check 60 year assumption # NOTE ben: changed 60 to couple_age_max
+        elif self.params['couple_age'] < ind.age < self.params['couple_age_max'] \
                 and not ind.partner \
                 and self.rng.random() < couple_prob:
             partner = self.choose_partner(ind)
             if partner:
                 self.P.form_couple(t, ind, partner)
 
-        # TODO immediate: add new component to check if women have children based on age and fertility rates
-        # TODO immediate: subject to not burn-period flag
-        # TODO immediate: check population parity against parity tables
-        # if ... : then birth
-
         # LEAVING HOME:
         # TODO ejw: not sure where to find this
         elif ind.age > self.params['leaving_age'] \
                 and ind.with_parents \
+                and self.P.hh_size(ind)>1 \
                 and not ind.partner \
                 and self.rng.random() < self.params_adj['leaving_probs'][index]:
             self.P.leave_home(t, ind)
 
         # DIVORCE:
-        # TODO ejw: to be updated with Singapore statistics check and find out why max age is hard-coded instead of using the parameter
-        elif self.params['divorce_age'] < ind.age < 50 \
+        # TODO ejw: to be updated with Singapore statistics check and find out why max age is hard-coded instead of using the parameter # NOTE ben: changed to params['divorce_age_max']
+        elif self.params['divorce_age'] < ind.age < self.params['divorce_age_max'] \
                 and ind.partner \
                 and self.rng.random() < self.params_adj['divorce_probs'][index]:
             self.P.separate_couple(t, ind)
 
         # ELSE: individual has a quiet year...
 
+        # TODO immediate: add new component to check if women have children based on age and fertility rates # NOTE ben: done
+        # TODO immediate: subject to not burn-period flag # NOTE ben: done
+        # TODO immediate: check population parity against parity tables
+        # if ... : then birth
+        # start new "if" to let new couple, leave house, and divorce women also check if they want to have a baby
+        if not burn_flag:
+            if (ind.sex==1) \
+                    and not (death==ind)\
+                    and (ind.age in self.fertility_age_rates) \
+                    and (self.rng.random() < self.fertility_age_rates[ind.age][0]):
+                birth = self.update_death_birth(t, False, ind)
+
         # TODO: bring in marriage based fertility rates
         # TODO: bring race
         # TODO: bring in income/educational levels
-        return death, birth 
+        return death, birth
 
 
     def choose_mother(self, index):
@@ -317,7 +331,6 @@ class Simulation(object):
         return None
 
 
-
     def update_all_demo(self, t):
         """
         Update population over period of t days.
@@ -360,7 +373,14 @@ class Simulation(object):
         for hh_id in source_hh_ids:
             new_hh_id = self.P.duplicate_household(t, hh_id)
             immigrants.extend(self.P.groups['household'][new_hh_id])
-        
+
+        """
+        hh_id = 964
+        if hh_id in self.P.groups['household']:
+            hh = self.P.groups['household'][hh_id]
+            print(hh_id, len(hh), [ i.ID for i in hh ])
+        """
+
         return births, deaths, immigrants, birthdays
 
 
