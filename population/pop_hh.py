@@ -107,6 +107,7 @@ class Pop_HH(Population):
         # create the new individual
         new_ind = self.add_individual(0, sex, logging=self.logging)
         new_ind.birth_order = len(mother.children)+1
+        new_ind.time_birth = t
 
         # assign parent and dependency relationships
         mother.set_prev_birth(rng)
@@ -141,6 +142,8 @@ class Pop_HH(Population):
         :param i_id: The ID of the dead individual.
         :type i_id: int
         """
+
+        ind.time_die = t
 
         # identify individuals who will be orphaned by this death
         #ind.dead = True

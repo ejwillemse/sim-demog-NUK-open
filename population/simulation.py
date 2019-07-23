@@ -42,8 +42,8 @@ class Simulation(object):
         self.start_time = None
         self.end_time = None
         self.pop_pd = []
-
-
+        self.hh_pd = []
+        self.pop_py = []
 
     def create_population(self, ind_type, logging=True):
         """
@@ -374,13 +374,6 @@ class Simulation(object):
             new_hh_id = self.P.duplicate_household(t, hh_id)
             immigrants.extend(self.P.groups['household'][new_hh_id])
 
-        """
-        hh_id = 964
-        if hh_id in self.P.groups['household']:
-            hh = self.P.groups['household'][hh_id]
-            print(hh_id, len(hh), [ i.ID for i in hh ])
-        """
-
         return births, deaths, immigrants, birthdays
 
 
@@ -425,63 +418,121 @@ class Simulation(object):
         #                              from here.
         # self.P.households: history of each household, but unknown how it's linked to self.P.groups.
 
-        n_people = len(self.P.I)
+        #n_people = len(self.P.I)
         pop = self.P.I
         ids = pop.keys()
 
         # attributes to be extracted
-        pd_dict = {
-                    'year': [t] * n_people,
-                    'person_id': [],
-                    'age': [],
-                    'adam_eve': [],
-                    'children_id': [],
-                    #'dependents_id': [],
-                    'divorced': [],
-                    'father_id': [],
-                    'mother_id': [],
-                    'household_id': [],
-                    'partner_id': [],
-                    'sex': [],
-                    'stay_with_parents': []
-                    }
-
+        col_seq = ['time', 'person_id', 'household_id', 'sex', 'age', 'time_birth', 'time_die',
+                   'birth_order', 'adam_eve', 'divorced', 'stay_with_parents', 'partner_id',
+                   'father_id', 'mother_id', 'children_id', 'dependents_id']
+        col_attr = {
+            'person_id': 'ID',
+            'age': 'age',
+            'sex': 'sex',
+            'birth_order': 'birth_order',
+            'adam_eve': 'adam',
+            'divorced': 'divorced',
+            'stay_with_parents': 'with_parents',
+            'time_birth': 'time_birth',
+            'time_die': 'time_die'
+        }
+        pd_dict = {}
+        #other_col = [ 'time', 'household_id', 'partner_id', 'father_id', 'mother_id', 'children_id', 'dependents_id'  ]
         for id_key in ids:
             person = pop[id_key]
+            person_records = { k:None for k in col_seq }
+            person_records.update({ k:getattr(person, v) for k,v in col_attr.items() })
+            #person_records.update({ k:None for k in other_col })
 
-            pd_dict['household_id'].append(person.groups['household'])
-            pd_dict['person_id'].append(id_key)
-            pd_dict['age'].append(person.age)
-            pd_dict['sex'].append(person.sex)
+            person_records['time'] = t
+            person_records['household_id'] = person.groups['household']
+
+            if not(person.partner is None):
+                person_records['partner_id'] = person.partner.ID
+
             father = None
             mother = None
             if len(person.parents) == 2:
                 father = person.parents[0].ID
                 mother = person.parents[1].ID
             elif len(person.parents) == 1:
+                father = None
                 mother = person.parents[0].ID
-            pd_dict['father_id'].append(father)
-            pd_dict['mother_id'].append(mother)
-            partner = None
-            if person.partner is not None:
-                partner = person.partner.ID
-            pd_dict['partner_id'].append(partner)
-            pd_dict['divorced'].append(person.divorced)
-            pd_dict['stay_with_parents'].append(person.with_parents)
-            if len(person.children):
-                children_ids = [str(ind.ID) for ind in person.children]
-                pd_dict['children_id'].append(';'.join(children_ids))
-            else:
-                pd_dict['children_id'].append(None)
-            # pd_dict['dependents_id'].append(';'.join(map(person.dependents_id)))
-            pd_dict['adam_eve'].append(person.adam)
+            person_records['father_id'] = father
+            person_records['mother_id'] = mother
 
-        pop_pd = pd.DataFrame.from_dict(pd_dict)
+            if len(person.children):
+                children_ids = ';'.join([str(ind.ID) for ind in person.children])
+                person_records['children_id'] = children_ids
+            if len(person.deps):
+                dep_ids = ';'.join([str(ind.ID) for ind in person.deps])
+                person_records['dependents_id'] = dep_ids
+
+            pd_dict[id_key] = person_records
+        pop_pd = pd.DataFrame.from_dict(pd_dict, orient='index')
+
+        #pop_pd = pop_pd[col_seq] # to ensure the column sequence
         self.pop_pd.append(pop_pd)
 
 
+    def save_households(self, t, age_groups={'infant':5, 'school_age':17, 'adult':64, 'retired':102}):
+        pop = self.P.I
+        hhs = self.P.households
+
+        hh_dict = {}
+        for ind_id, person in pop.items():
+            hh_id = person.groups['household']
+            if not hh_id in hh_dict: hh_dict[hh_id] = []
+            hh_dict[hh_id].append(str(ind_id))
+
+        hh_dict2 = { k:';'.join(v) for k,v in hh_dict.items() }
+        hh_dict2 = { k:{ 'time':t, 'household_id':k, 'member':v, 'household_founded':getattr(hhs[k],'founded')  } for k,v in hh_dict2.items() }
+
+        for hh_id, member in hh_dict.items():
+            member_ages = [pop[int(m)].age for m in member]
+            member_group = {}
+            prev = 0
+            for g, up in age_groups.items():
+                member_group[g] = [ma for ma in member_ages if prev <= ma < up]
+                prev = up
+            age_dist = {g: len(mg) for g, mg in member_group.items()}
+            age_dist['household_size'] = len(member)
+            hh_dict2[hh_id].update(age_dist)
+
+        hh_df = pd.DataFrame.from_dict(hh_dict2, orient='index')
+        self.hh_pd.append(hh_df)
 
 
+    def get_save_pop(self, level='individual'):
+        target_df_list = None
+        if level=='individual':
+            target_df_list = self.pop_pd
+        elif level=='household':
+            target_df_list = self.hh_pd
+        target_df = target_df_list[0]
+        for df in target_df_list[1:]:
+            target_df = target_df.append(df)
+        target_df = target_df.reset_index(drop=True)
+        return target_df
+
+
+    def save_demog_stats(self, t):
+        # records the demographic (pyramid) stats on t
+        pop_pyramid = { sex:{ i:0 for i in range(102) } for sex in [0,1] }
+        for k, ind in self.P.I.items():
+            pop_pyramid[ind.sex][ind.age]+=1
+        age_list = []
+        for age, male in pop_pyramid[0].items():
+            female = pop_pyramid[1][age]
+            age_list.append({'time':t, 'age':age, 'male':male, 'female':female})
+        self.pop_py.extend(age_list)
+
+
+    def get_save_demog_stats(self):
+        pop_py_df = pd.DataFrame.from_records(self.pop_py)
+        pop_py_df = pop_py_df[['time', 'age', 'male', 'female']]
+        return pop_py_df
 
 
     def run(self):
