@@ -27,6 +27,8 @@ class Experiment(object):
         print('experiment store snapshots for these years: {}'.format(','.join([str(y) for y in store_iterations])))
         self.params = self._load_params(param_file)
         self.timesteps = self.params['years'] * floor(365.0/self.params['t_dur'])
+        self.burn_steps = self.params['demo_burn'] * floor(365.0/self.params['t_dur'])
+        self.sim_timesteps = self.timesteps - self.burn_steps
 
 
     def _load_params(self, param_file):
@@ -59,9 +61,10 @@ class Experiment(object):
         self.pop_py = []
         self.sim.start_time = time.time()
         for y in tqdm(range(self.timesteps), desc='Updating years'):
+            is_burn = y<self.params['demo_burn']
             t = y * self.params['t_dur']
             # y=year, t=day
-            b,d,im,bd = self.sim.update_all_demo(t)
+            b,d,im,bd = self.sim.update_all_demo(t, burn_flag=is_burn)
             #print('\t'.join([ str(x) for x in [i, t, len(sim.P.I), len(b), len(d), len(im)]]))
             vals=  [y, t, len(self.sim.P.I), len(b), len(d), len(im)]
             self.sum_dic[y] = { k:v for k,v in zip(cols, vals) }

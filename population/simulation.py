@@ -215,7 +215,7 @@ class Simulation(object):
                     and not (death==ind)\
                     and (ind.age in self.fertility_age_rates) \
                     and (self.rng.random() < self.fertility_age_rates[ind.age][0]):
-                birth = self.update_death_birth(t, False, ind)
+                birth = self.update_death_birth(t, None, ind)
 
         # TODO: bring in marriage based fertility rates
         # TODO: bring race
@@ -331,7 +331,7 @@ class Simulation(object):
         return None
 
 
-    def update_all_demo(self, t):
+    def update_all_demo(self, t, burn_flag=False):
         """
         Update population over period of t days.
 
@@ -351,11 +351,12 @@ class Simulation(object):
 
         cur_inds = list(self.P.I.values())
         for ind in cur_inds: 
-            death, birth = self.update_individual_demo(t, ind, index)
+            death, birth = self.update_individual_demo(t, ind, index, burn_flag=burn_flag)
             if death: deaths.append(death)
             if birth: births.append(birth)
 
         #population growth
+        # TODO ben: check if this is still needed
         for x in range(int(len(self.P.I) * self.params_adj['growth_rates'][index])):
             mother = self.choose_mother(index)
             births.append(self.update_death_birth(t, None, mother))
