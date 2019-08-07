@@ -7,7 +7,7 @@
 #   ...
 # columns:
 #   0=proportion
-#   1=number of adults (18+) in houeshold                   (after 3rd cutoff)
+#   1=number of adults (18+) in household                   (after 3rd cutoff)
 #   2=number of school age children (5--17) in household    (between 2nd and 3rd cutoff)
 #   3=number of pre-school age children (0--4) in household (up-to 1st cutoff)
 0.0 4 18
