@@ -1,6 +1,5 @@
 population/__pycache__
 test/output/.Rproj.user
 .Rproj.user
-*.ipynb
-*.csv
 *.png
+.idea
