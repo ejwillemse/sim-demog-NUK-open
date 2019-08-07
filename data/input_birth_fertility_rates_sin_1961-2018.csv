@@ -1,0 +1,46 @@
+
+Variables,1960,1961,1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018
+Total Fertility Rate(Per Female),5.76,5.41,5.21,5.16,4.97,4.66,4.46,3.91,3.53,3.22,3.07,3.02,3.04,2.79,2.35,2.07,2.11,1.82,1.79,1.79,1.82,1.78,1.74,1.61,1.62,1.61,1.43,1.62,1.96,1.75,1.83,1.73,1.72,1.74,1.71,1.67,1.66,1.61,1.48,1.47,1.6,1.41,1.37,1.27,1.26,1.26,1.28,1.29,1.28,1.22,1.15,1.2,1.29,1.19,1.25,1.24,1.2,1.16,1.14
+        15 - 19 Years(Per Thousand Females),69.6,63.4,52,45.7,38.3,35.9,33,35.8,30.9,27.1,25.9,25.6,25.3,24.2,20.8,16.8,16.2,13.4,11.8,11.4,12.7,11.8,11.4,10.4,10.3,9.6,8.6,7.7,7.3,7.2,8.3,8.4,7.9,8.3,7.4,6.6,6.8,6.8,7.5,8.4,8.8,8.4,8,6.7,6.6,7.2,6.6,6.1,6.1,5,4.8,4.7,4.3,3.8,3.3,2.7,2.7,2.6,2.6
+        20 - 24 Years(Per Thousand Females),250.5,241.1,245.5,249,240,227.1,218.5,195.8,165.8,150.1,139,138.3,137.4,130.5,118.9,102.1,107.2,90.3,86.8,85.1,84.9,84.2,80.2,72.4,68.6,68,60.4,59.7,65,59.7,58.7,53.5,52.1,49.8,46.9,46.9,44.8,42,39.7,37.3,42.2,35.7,34.6,32.4,32.2,32.5,30.6,31.2,29.1,25.4,23.3,22.4,22.2,19.7,19.5,18.7,17,15.1,14.5
+        25 - 29 Years(Per Thousand Females),323.9,304.9,291.7,287.2,277.6,259.5,261.2,244.7,236.6,227.8,208.8,212.6,218,199.5,172.2,154.5,160.2,138.9,140.9,139.3,144.5,141.2,136.4,125.5,124.2,123.9,110.1,124.8,147.5,129.7,136,129.2,128.4,130,129.2,125.6,122.8,116.9,105.2,105.1,110.1,96.2,91.6,82.2,80.6,80.7,79.6,78.7,78.9,74.2,68.1,73.4,76.7,70.5,71.1,68.7,65.8,62.2,60.8
+        30 - 34 Years(Per Thousand Females),259.7,238.4,231.5,228.7,226.7,216.2,202,166.7,152,134.3,138,137.6,139.2,128.4,102.9,94.9,95.9,85.2,86.8,88.4,87.8,84.2,84.5,79.9,83,85.6,74.4,92.5,118.9,104.5,110.8,106.8,107.2,108.8,109.2,107.4,108.5,107.3,96.1,97.5,107.9,94.9,96.2,90,89.9,89.2,93.1,94.4,94.6,90.1,86,89.5,99.5,90.2,99.3,98.5,96.2,93.3,93
+        35 - 39 Years(Per Thousand Females),176.7,168.9,156.2,156.1,147.7,138.1,124.8,95.9,85.2,75.2,74.5,68.5,66.1,57.6,42.6,36.3,33.8,28.7,26.7,27.5,28,29.3,31,29.5,32.1,31.1,28.4,33.5,44.9,42.1,44.3,41.7,41.7,43.6,42.6,41.3,42.6,41.7,39.8,38.6,43.3,39.5,38.2,36.3,35.6,36.8,38.7,41.5,41.5,42.6,42.2,42.4,46.3,44.7,48.3,49.9,49.7,48.6,48.4
+        40 - 44 Years(Per Thousand Females),70.7,64.8,65.1,64.9,62.8,54.9,51.7,42.9,35.3,29.4,26.7,21.9,20.9,17.4,12.7,10,8.1,6.9,5.3,5.5,5.8,5.5,4.9,3.9,4.9,4.5,4.7,5.9,7.4,7.6,7.4,6.5,6.7,7.2,6.7,6.5,7,7,6.6,6.4,7.6,6.8,5.8,6.1,6.3,6.2,6.4,6.4,6.6,7,6.1,7.2,8,8,8.3,8.9,8.8,9,8.8
+        45 - 49 Years(Per Thousand Females),na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,0.5,0.4,0.3,0.2,0.2,0.2,0.2,0.2,0,0.2,0.1,0.3,0.2,0.2,0.1,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.3,0.3,0.3,0.3,0.3,0.3,0.4,0.3,0.5,0.5
+        Chinese(Per Female),5.62,5.2,4.92,4.83,4.6,4.31,4.08,3.59,3.29,3.05,3,2.98,3,2.79,2.33,2.06,2.15,1.81,1.78,1.77,1.73,1.67,1.62,1.47,1.46,1.46,1.25,1.46,1.84,1.56,1.65,1.54,1.53,1.55,1.54,1.51,1.5,1.44,1.27,1.29,1.43,1.21,1.19,1.09,1.09,1.1,1.11,1.14,1.14,1.08,1.02,1.08,1.18,1.05,1.13,1.1,1.07,1.01,0.98
+        Malays(Per Female),6.42,6.42,6.63,6.75,6.78,6.31,6.14,5.29,4.52,3.78,3.45,3.25,3.26,2.88,2.46,2.12,1.93,1.87,1.83,1.84,2.2,2.25,2.27,2.21,2.27,2.28,2.22,2.34,2.51,2.62,2.69,2.63,2.61,2.62,2.54,2.51,2.52,2.47,2.48,2.41,2.54,2.45,2.3,2.1,2.07,2.03,2.02,1.94,1.91,1.82,1.65,1.64,1.69,1.66,1.73,1.79,1.8,1.82,1.86
+        Indians(Per Female),7.37,6.96,6.96,6.9,7.06,6.69,6.61,5.62,4.77,4.58,3.15,3.14,3.08,2.61,2.3,1.95,1.84,1.7,1.79,1.88,2.03,1.97,1.93,1.83,1.84,1.79,1.73,1.76,1.89,1.92,1.89,1.84,1.9,1.94,1.81,1.71,1.74,1.71,1.68,1.55,1.59,1.51,1.51,1.39,1.34,1.29,1.27,1.25,1.19,1.14,1.13,1.09,1.15,1.11,1.13,1.15,1.04,1,1.01
+Gross Reproduction Rate(Per Female),2.78,2.63,2.53,2.51,2.42,2.27,2.17,1.91,1.72,1.56,1.49,1.46,1.47,1.35,1.13,1,1.02,0.88,0.87,0.85,0.88,0.86,0.83,0.77,0.77,0.78,0.69,0.78,0.95,0.85,0.88,0.84,0.83,0.84,0.83,0.8,0.8,0.77,0.72,0.7,0.77,0.68,0.67,0.62,0.61,0.61,0.62,0.62,0.62,0.59,0.56,0.58,0.62,0.57,0.61,0.6,0.58,0.56,na
+Net Reproduction Rate(Per Female),2.54,2.41,2.31,2.3,2.22,2.08,1.97,1.75,1.58,1.43,1.42,1.41,1.42,1.3,1.09,0.97,0.98,0.85,0.84,0.82,0.86,0.84,0.82,0.76,0.76,0.76,0.68,0.77,0.93,0.83,0.87,0.83,0.82,0.83,0.82,0.8,0.79,0.77,0.71,0.7,0.76,0.67,0.66,0.61,0.6,0.61,0.61,0.62,0.62,0.59,0.55,0.58,0.62,0.57,0.6,0.6,0.58,0.56,na
+Crude Birth Rate(Per Thousand Residents),37.5,35.2,33.7,33.2,31.6,29.5,28.3,25.6,23.5,21.8,22.1,22.3,23.1,22,19.4,17.7,18.7,16.5,16.8,17.1,17.6,17.6,17.5,16.3,16.5,16.6,14.8,16.6,19.8,17.5,18.2,17.1,16.8,16.8,16.2,15.6,15.2,14.5,13.1,12.8,13.7,11.8,11.4,10.5,10.3,10.2,10.3,10.3,10.2,9.9,9.3,9.5,10.1,9.3,9.8,9.7,9.4,8.9,8.8
+Total Live-births(Number),"61,775","59,930","58,977","59,530","58,217","55,725","54,680","50,560","47,241","44,562","45,934","47,088","49,678","48,269","43,268","39,948","42,783","38,364","39,441","40,779","41,217","42,250","42,654","40,585","41,556","42,484","38,379","43,616","52,957","47,669","51,142","49,114","49,402","50,225","49,554","48,635","48,577","47,333","43,664","43,336","46,997","41,451","40,760","37,485","37,174","37,492","38,317","39,490","39,826","39,570","37,967","39,654","42,663","39,720","42,232","42,185","41,251","39,615","39,115"
+Resident Live-births(Number),na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,"40,100","41,000","41,300","39,300","40,200","41,100","37,159","42,362","51,537","46,361","49,787","47,805","47,907","48,739","48,075","46,916","46,707","45,356","41,636","41,327","44,765","39,281","38,555","35,474","35,135","35,528","36,272","37,074","37,277","36,925","35,129","36,178","38,641","35,681","37,967","37,861","36,875","35,444","35,108"
+
+
+Figures for 2018 are preliminary.
+
+TOTAL FERTILITY RATE,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+    15 - 19 YEARS,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+    20 - 24 YEARS,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+    25 - 29 YEARS,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+    30 - 34 YEARS,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+    35 - 39 YEARS,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+    40 - 44 YEARS,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+    45 - 49 YEARS,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+    CHINESE,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+    MALAYS,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+    INDIANS,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+GROSS REPRODUCTION RATE,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+NET REPRODUCTION RATE,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+CRUDE BIRTH RATE,Data prior to 1980 pertain to total population.  Data from 1980 onwards pertain to resident population (i.e. Singapore citizens and permanent residents).
+RESIDENT LIVE-BIRTHS,Refers to births with at least one parent who is a Singapore citizen or permanent resident.  Data for 1980-1985 are estimated.
+
+"SOURCE: SINGAPORE DEPARTMENT OF STATISTICS, IMMIGRATION AND CHECKPOINTS AUTHORITY"
+
+
+
+
+Generated by: SingStat Table Builder
+Date generated: 17/03/2019
+Contact: info@singstat.gov.sg 
