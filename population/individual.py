@@ -63,7 +63,8 @@ class Individual(object):
             'partner', 'divorced', 'parents', \
             'mother', 'father', \
             'children', \
-            'deps', 'with_parents'
+            'deps', 'with_parents', \
+            'time_birth', 'time_die', 'hh_id' #, 'dead'
 
     def __init__(self, ID, age=0, sex=0, adam=False, logging=True):
 
@@ -76,6 +77,10 @@ class Individual(object):
         self.adam = adam
         if logging: self.log = []
         self.birth_order = 0
+        #self.dead = False
+        self.time_birth = -1
+        self.time_die= -1 # alive
+        self.hh_id = []
 
         self.groups = {}
 

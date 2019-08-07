@@ -107,6 +107,7 @@ class Pop_HH(Population):
         # create the new individual
         new_ind = self.add_individual(0, sex, logging=self.logging)
         new_ind.birth_order = len(mother.children)+1
+        new_ind.time_birth = t
 
         # assign parent and dependency relationships
         mother.set_prev_birth(rng)
@@ -115,7 +116,6 @@ class Pop_HH(Population):
         for x in parents:
             x.children.append(new_ind)
             x.deps.append(new_ind)
-
         hh_id = parents[0].groups['household']
         self.add_individuals_to_group('household', hh_id, [new_ind])
 
@@ -143,7 +143,10 @@ class Pop_HH(Population):
         :type i_id: int
         """
 
+        ind.time_die = t
+
         # identify individuals who will be orphaned by this death
+        #ind.dead = True
         orphans = ind.deps if not ind.partner else []
 
         if self.logging:
@@ -178,7 +181,8 @@ class Pop_HH(Population):
         """
         for x in orphans:
             if x.age > cutoff:
-                self._form_single_hh(t, x)
+                #self._form_single_hh(t, x)
+                self._keep_at_household(t, x)
             else:
                 self._reallocate_orphan(t, x, rng)
 
@@ -294,7 +298,6 @@ class Pop_HH(Population):
         :type log_msg: string
         :returns: `True` if i_id was dependent upon anyone.
         """
-
         dep = False
         for x in self.housemates(ind):
             if ind in x.deps:
@@ -319,12 +322,17 @@ class Pop_HH(Population):
         :type rng: :class:`random.Random`
         """
 
-        assert not ind.partner 
-        assert not ind.children
+        assert not ind.partner
+        # NOTE ben: female<18 age can give birth but are not forming single hh,
+        # so need to remove assertion of not ind.children, added 2 if ind.children
+        #assert not ind.children
 
         cur_hh = ind.groups['household']
         # remove them from their current household
         self._remove_individual_from_hh(t, ind, 'c-', "Lost relocated child")
+        if ind.children:
+            for child in ind.children:
+                self._remove_individual_from_hh(t, child, 'c-', "Lost relocated child's child")
 
         # choose destination household from among family households
         candidates = self.groups_by_min_size('household', 3)
@@ -340,6 +348,8 @@ class Pop_HH(Population):
 
         # add individual to new household (must happen last!!)
         self.add_individuals_to_group('household', tgt_hh, [ind])
+        if ind.children:
+            self.add_individuals_to_group('household', tgt_hh, ind.children)
 
         if self.logging:
             g_ind.add_log(t, 'c+', "Gained dependent %d (orphan)" % ind.ID)
@@ -350,6 +360,26 @@ class Pop_HH(Population):
                     len(self.groups['household'][tgt_hh]))
             ind.add_log(t, 'r', "Relocated - with %d as guardian" % g_ind.ID)
 
+
+    def _keep_at_household(self, t, ind):
+        """
+        (modify from _form_single_hh() for processing orphan who is old enough)
+        keep members in the houshold removing the previous guardian
+        :param t: the current time step.
+        :type t: int
+        :param i_id: the first partner in the couple.
+        :type i_id: int
+        :returns: the ID of the new household.
+        """
+        # remove any guardians
+        self._remove_from_guardians(t, ind, \
+                                    'c-', "Lost dependent %d (leaving)" % ind.ID, ind.ID)
+        ind.with_parents = False
+        hh_id = ind.groups['household']
+        if self.logging:
+            ind.add_log(t, 'l1', "Keeping household (as is)")
+            self.households[hh_id].add_log(t, 'f1', "Household formed", 1)
+        return hh_id
 
     def _form_single_hh(self, t, ind):
         """
@@ -374,6 +404,12 @@ class Pop_HH(Population):
 
         # add to newly created household
         new_hh = self.add_group('household', [ind])
+
+        # move the dependents of ind together with ind
+        if ind.deps:
+            for inddep in ind.deps:
+                self._remove_individual_from_hh(t, inddep, 'l', "Individual left")
+            self.add_individuals_to_group('household', new_hh, ind.deps)
 
         ind.with_parents = False
 
