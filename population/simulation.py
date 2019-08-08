@@ -355,11 +355,12 @@ class Simulation(object):
             if death: deaths.append(death)
             if birth: births.append(birth)
 
+        """
         #population growth
-        # TODO ben: check if this is still needed
         for x in range(int(len(self.P.I) * self.params_adj['growth_rates'][index])):
             mother = self.choose_mother(index)
             births.append(self.update_death_birth(t, None, mother))
+        """
 
         #immigration
         imm_count = 0

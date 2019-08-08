@@ -37,8 +37,6 @@ class Experiment(object):
         params = parse_params(param_file, os.path.join(
             os.path.dirname(__file__), 'paramspec_pop.cfg'))
         self.output_path = params['prefix']
-        create_path(params['prefix'])
-        create_path(os.path.join(params['prefix'], 'thumbnails'))
         return params
 
 
@@ -95,7 +93,9 @@ class Experiment(object):
 
 
     def output_results(self):
-        print("Exporting outputs...")
+        create_path(self.output_path)
+        create_path(os.path.join(self.output_path, 'thumbnails'))
+        print("Exporting outputs to...", self.output_path)
         sum_df, pop_py_df, pop_long_df, hh_long_df = self.get_results()
         f0 = os.path.join(self.output_path, 'yearly_summary.csv')
         f1 = os.path.join(self.output_path, 'stored_sex_age_stats.csv')
