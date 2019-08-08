@@ -7,9 +7,9 @@ input parameters
    - Description: create the initial household structure, i.e. how many adult, school age children, and infant
    - Parameter name(s): hh_composition
    - Source data file: (from single, nuclei family etc. statistics data)
-   - TODO: derive the hh_comp 
+   - TODO: derive the hh_comp
 
-2.  age distribution
+2. age distribution
    - Description: create the initial population structure
    - Parameter name(s): age_distribution
    - Source data file: ../data/demographic_ethnicity.csv
