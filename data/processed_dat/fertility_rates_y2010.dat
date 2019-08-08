@@ -1,4 +1,4 @@
-# Age-specific fertility rates (2009 ABS data) 
+# Age-specific fertility rates - data processed from SingStat, check docs/data_input_sources.md for references
 # columns:
 #   0=age
 #   1=fertility rate (proportion of women giving birth between age x and age x+1
