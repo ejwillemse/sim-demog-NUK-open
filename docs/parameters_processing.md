@@ -13,22 +13,22 @@ input parameters
    - Description: create the initial population structure
    - Parameter name(s): age_distribution
    - Source data file: ../data/demographic_ethnicity.csv
-   - TODO: create age-specific population pattern from age-group
+   - TODO: ~~create age-specific population pattern from age-group~~
    - *Potential extension: add gender-specific*
 
 3. fertility rates by age
    - Description: decide if a women should have new baby
    - Parameter name(s): fertility_age_probs, fertility_age_rates
    - Source data file: ../data/input_birth_fertility_rates_sin_1961-2018.csv
-   - TODO: prepare age-specific fertility rates table
+   - TODO: ~~prepare age-specific fertility rates table~~
    - *Potential extension: add new born child sex (use age distribution data)*
 
 4. death rate by age and gender
    - Description: decide if a person of specific age and sex should die
    - Parameter name(s): death_rates_m, death_rates_f
    - Source data file: ../data/death_rate_agespecific.csv
-   - TODO: prepare age-specific death rate table for male
-   - TODO: prepare age-specific death rate table for female
+   - TODO: ~~prepare age-specific death rate table for male~~
+   - TODO: ~~prepare age-specific death rate table for female~~
 
 5. couple prob by age
    - Description: decide if a  person should or should not get married.
