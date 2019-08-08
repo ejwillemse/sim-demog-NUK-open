@@ -6,7 +6,7 @@ input parameters
 1. household composition
    - Description: create the initial household structure, i.e. how many adult, school age children, and infant
    - Parameter name(s): hh_composition
-   - Source data file: (from single, nuclei family etc. statistics data)
+   - Source data file: (possibly from nuclei family statistics data)
    - TODO: derive the hh_comp
 
 2. age distribution
@@ -14,6 +14,7 @@ input parameters
    - Parameter name(s): age_distribution
    - Source data file: ../data/demographic_ethnicity.csv
    - TODO: ~~create age-specific population pattern from age-group~~
+   - TODO: ~~calculate the total population~~
    - *Potential extension: add gender-specific*
 
 3. fertility rates by age
@@ -21,6 +22,7 @@ input parameters
    - Parameter name(s): fertility_age_probs, fertility_age_rates
    - Source data file: ../data/input_birth_fertility_rates_sin_1961-2018.csv
    - TODO: ~~prepare age-specific fertility rates table~~
+   - TODO: ~~prepare age-specific fertility distribution by age~~
    - *Potential extension: add new born child sex (use age distribution data)*
 
 4. death rate by age and gender
