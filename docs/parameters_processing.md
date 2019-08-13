@@ -35,8 +35,8 @@ input parameters
 5. couple prob by age
    - Description: decide if a  person should or should not get married.
    - Parameter name(s): couple_probs, couple_prob, couple_age, couple_age_max
-   - Source data file: ../data/input_marriage_rates_sin_1980-2017.csv
-   - TODO: calculate the single parameter
+   - Source data file: ../data/input_relationship_status_sin_1980-2018.csv, check input_marriage_rates_sin_1980-2017.csv
+   - TODO: ~~calculate the single parameter~~ check prepare_couple_prob
    - *Potential extension: can add age and sex specific*
 
 6. couple age diff
@@ -49,8 +49,8 @@ input parameters
 7. divorce probability
    - Description: decide if a couple should divorce
    - Parameter name(s): divorce_prob, divorce_age, divorce_age_max
-   - Source data file: ../data/input_relationship_status_sin_1980-2018.csv
-   - TODO: calculate the single parameter
+   - Source data file: ../data/input_relationship_status_sin_1980-2018.csv, M830202 - Divorce Rates, Annual.csv
+   - TODO: ~~calculate the single parameter~~ check prepare_divorce_prob.ipynb
    - *Potential extension: can add age and sex specific*
 
 8. leaving probability
