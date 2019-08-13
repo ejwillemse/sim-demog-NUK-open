@@ -6,8 +6,9 @@ input parameters
 1. household composition
    - Description: create the initial household structure, i.e. how many adult, school age children, and infant
    - Parameter name(s): hh_composition
-   - Source data file: (possibly from nuclei family statistics data)
+   - Source data file: 2000census-Table 9 Resident Households by Household Structure and Household Size.xlsx, 2010census-Table 9 Resident Households by Household Structure and Household Size.xlsx
    - TODO: derive the hh_comp
+   - TODO: get alternative data source for 1990 (?)
 
 2. age distribution
    - Description: create the initial population structure
