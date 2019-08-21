@@ -147,7 +147,7 @@ class Pop_HH(Population):
 
         # identify individuals who will be orphaned by this death
         #ind.dead = True
-        orphans = ind.deps if not ind.partner else []
+        orphans = ind.deps if ind.partner is None else []
 
         if self.logging:
             ind.add_log(t, 'd', "Died at age %d" % ind.age)
@@ -180,6 +180,7 @@ class Pop_HH(Population):
         existing family household (with at least one other child).
         """
         for x in orphans:
+            #print(x.ID, x.age)
             if x.age > cutoff:
                 #self._form_single_hh(t, x)
                 self._keep_at_household(t, x)

@@ -186,7 +186,7 @@ class Population(object):
         :type i_id: int
         :returns: The ID of the group the individual has left.
         """
-
+        #print(ind.ID)
         assert group_type in ind.groups
 
         group_id = ind.groups[group_type]

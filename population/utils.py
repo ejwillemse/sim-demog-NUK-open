@@ -159,6 +159,7 @@ def load_prob_tables(fname):
 
 
 def load_probs(fname, sorted=False):
+    #print(fname)
     """
     Return an arbitrary probability table loaded from file fname
 

@@ -36,7 +36,8 @@ class Experiment(object):
         #print(os.path.dirname(__file__))
         params = parse_params(param_file, os.path.join(
             os.path.dirname(__file__), 'paramspec_pop.cfg'))
-        self.output_path = params['prefix']
+        self.output_path = os.path.join(os.path.dirname(param_file), params['prefix'])
+        params['resource_prefix'] = os.path.join(os.path.dirname(param_file), params['resource_prefix'])
         return params
 
 

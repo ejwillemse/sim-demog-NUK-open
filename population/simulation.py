@@ -86,6 +86,7 @@ class Simulation(object):
         self.hh_comp = load_probs(os.path.join(self.params['resource_prefix'], 
                     self.params['hh_composition']), False)
         self.params['age_cutoffs'] = [int(x) for x in self.hh_comp[0][1:][0]]  # yuk!
+        self.params['adult_age'] = int(float(self.params['adult_age']))
         self.age_dist = load_probs(os.path.join(self.params['resource_prefix'], 
                     self.params['age_distribution']))
 
@@ -104,12 +105,17 @@ class Simulation(object):
         self.fertility_age_probs = load_prob_tables(os.path.join(
             self.params['resource_prefix'], 
             self.params['fertility_age_probs']))
-        self.fertility_parity_probs = load_probs_new(os.path.join(
-            self.params['resource_prefix'],
-            self.params['fertility_parity_probs']))
+        self.fertility_parity_probs = None
+        #load_probs_new(os.path.join(
+        #    self.params['resource_prefix'],
+        #    self.params['fertility_parity_probs']))
         self.fertility_age_rates = self.parse_age_rates(os.path.join(
             self.params['resource_prefix'],
             self.params['fertility_age_rates']), annual_factor, False)
+        self.new_marriage_years = float(self.params['new_marriage_years'])
+        self.new_marriage_fertility = float(self.params['marriage_based_fertility'])
+        self.params['partner_age_diff'] = float(self.params['partner_age_diff'])
+        self.params['partner_age_sd'] = float(self.params['partner_age_sd'])
 
         ### load and scale leave/couple/divorce and growth rates
         if self.params['dyn_rates']:
@@ -186,6 +192,9 @@ class Simulation(object):
             partner = self.choose_partner(ind)
             if partner:
                 self.P.form_couple(t, ind, partner)
+                if not burn_flag:
+                    ind.new_marriage = self.new_marriage_years
+                    partner.new_marriage = self.new_marriage_years
 
         # LEAVING HOME:
         # TODO ejw: not sure where to find this
@@ -208,16 +217,21 @@ class Simulation(object):
         # TODO immediate: add new component to check if women have children based on age and fertility rates # NOTE ben: done
         # TODO immediate: subject to not burn-period flag # NOTE ben: done
         # TODO immediate: check population parity against parity tables
+        # TODO: bring in marriage based fertility rates
         # if ... : then birth
         # start new "if" to let new couple, leave house, and divorce women also check if they want to have a baby
-        if not burn_flag:
-            if (ind.sex==1) \
-                    and not (death==ind)\
-                    and (ind.age in self.fertility_age_rates) \
-                    and (self.rng.random() < self.fertility_age_rates[ind.age][0]):
+        if (not burn_flag) and (ind.sex==1) \
+                and not (death==ind)\
+                and (ind.age in self.fertility_age_rates):
+            fertility_rate_age = self.fertility_age_rates[ind.age][0]
+            if ind.new_marriage>0:
+                fertility_rate_age = fertility_rate_age * self.new_marriage_fertility
+            if (self.rng.random() < fertility_rate_age):
                 birth = self.update_death_birth(t, None, ind)
 
-        # TODO: bring in marriage based fertility rates
+        if (not burn_flag) and (ind.new_marriage > 0):
+            ind.new_marriage-=1
+
         # TODO: bring race
         # TODO: bring in income/educational levels
         return death, birth
@@ -285,13 +299,17 @@ class Simulation(object):
         """
 
         # sex 0 means mail and 1 means female
-        mean_age = ind.age+self.params['partner_age_diff'] \
-                if ind.sex == 0 else ind.age-self.params['partner_age_diff']
+        if ind.sex == 0:
+            mean_age = float(ind.age) + self.params['partner_age_diff']
+        else:
+            mean_age = float(ind.age) - self.params['partner_age_diff']
+        #mean_age = ind.age+self.params['partner_age_diff'] \
+        #        if ind.sex == 0 else ind.age-self.params['partner_age_diff']
         tgt_age = 0
         while tgt_age < self.params['min_partner_age']:
             # TODO ejw: allow for different kind of age difference distributions
             # TODO ejw: update to account for race
-            tgt_age = int(self.rng.gauss(mean_age, self.params['partner_age_sd']))
+            tgt_age = int(round(self.rng.gauss(mean_age, self.params['partner_age_sd'])))
             tgt_set = self.P.individuals_by_age(tgt_age, tgt_age)
             candidates = [x \
                 for x in tgt_set \
@@ -321,7 +339,7 @@ class Simulation(object):
 
         if ind:
             orphans = self.P.death(t, ind)
-            self.P.process_orphans(t, orphans, self.params['age_cutoffs'][-2], self.rng)
+            self.P.process_orphans(t, orphans, self.params['adult_age'], self.rng)
         
         if mother:
             sex = self.rng.randint(0, 1)

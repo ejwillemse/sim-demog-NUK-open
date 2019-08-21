@@ -64,7 +64,7 @@ class Individual(object):
             'mother', 'father', \
             'children', \
             'deps', 'with_parents', \
-            'time_birth', 'time_die', 'hh_id' #, 'dead'
+            'time_birth', 'time_die', 'hh_id', 'new_marriage' #, 'dead'
 
     def __init__(self, ID, age=0, sex=0, adam=False, logging=True):
 
@@ -81,6 +81,7 @@ class Individual(object):
         self.time_birth = -1
         self.time_die= -1 # alive
         self.hh_id = []
+        self.new_marriage = 0.0 # if new marriage, set to N years and start count down, for marriage based new child
 
         self.groups = {}
 
