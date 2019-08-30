@@ -1,7 +1,7 @@
 ## Dummy allocation
 
 This folder contains data for a dummy allocation of a 100'000 population to 380 buildings over a 10-year period. 
-The building allocation is donve via the `Building.ID` key.
+The building allocation can be traced via the `Building.ID` key.
 
 The population, with their assigned building id is in:
 
