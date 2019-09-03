@@ -3,8 +3,8 @@ configobj==5.0.6
 cycler==0.10.0
 kiwisolver==1.1.0
 matplotlib==3.0.3
-mkl-fft==1.0.12
-mkl-random==1.0.2
+mkl-fft#==1.0.12
+mkl-random#==1.0.2
 numpy==1.16.3
 pandas==0.24.2
 pyparsing==2.4.0
