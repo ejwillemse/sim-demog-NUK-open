@@ -11,4 +11,4 @@ test/output/.Rproj.user
 # file too big for github
 .experiment 
 
-*/stored_population.csv
+*stored_population.csv
