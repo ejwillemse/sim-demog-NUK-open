@@ -114,6 +114,7 @@ class Simulation(object):
             self.params['fertility_age_rates']), annual_factor, False)
         self.new_marriage_years = float(self.params['new_marriage_years'])
         self.new_marriage_fertility = float(self.params['marriage_based_fertility'])
+        self.single_mother_fertility = float(self.params['single_mother_fertility'])
         self.params['partner_age_diff'] = float(self.params['partner_age_diff'])
         self.params['partner_age_sd'] = float(self.params['partner_age_sd'])
 
@@ -167,6 +168,12 @@ class Simulation(object):
         """
 
         death = None; birth = None
+        """
+        # to record events that trigger relocation
+        leave = False
+        marriage = False
+        separate = False
+        """
 
         couple_prob = self.params_adj['couple_probs'][index]
 #        if ind.divorced and ind.deps: couple_prob *= 0.5
@@ -226,6 +233,8 @@ class Simulation(object):
             fertility_rate_age = self.fertility_age_rates[ind.age][0]
             if ind.new_marriage>0:
                 fertility_rate_age = fertility_rate_age * self.new_marriage_fertility
+            if ind.partner is None:
+                fertility_rate_age = fertility_rate_age * self.single_mother_fertility
             if (self.rng.random() < fertility_rate_age):
                 birth = self.update_death_birth(t, None, ind)
 
@@ -339,7 +348,7 @@ class Simulation(object):
 
         if ind:
             orphans = self.P.death(t, ind)
-            self.P.process_orphans(t, orphans, self.params['adult_age'], self.rng)
+            self.P.process_orphans(t, orphans, float(self.params['adult_age']), self.rng)
         
         if mother:
             sex = self.rng.randint(0, 1)
