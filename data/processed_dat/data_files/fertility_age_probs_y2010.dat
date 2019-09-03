@@ -1,0 +1,50 @@
+# Given that a birth has a occurred, probability distribution over the    
+# age of the mother. This is generated from ABS age-specific fertility rates,   
+# essentially rescaling them. Theoretically, this is incorrect, as       
+# age-specific fertility rates are expressed as "# births occurring to women of
+# age x" divided by "number of women of age x" However, given that the age
+# distribution is relatively flat over the relevant age range, rescaled     
+# fertility rates serve as a very close approximation.       
+# ---
+# it is calculated as multiply the female proportion (from female age distribution) by the fertility rate, 
+# and calculate the proportion of the multiplication results to sum to 1. 
+# ---
+#               
+# columns:              
+# 0=age              
+# 1=probability              
+15 0.0
+16 0.0019044386019118288
+17 0.004442116556991872
+18 0.00699679276280226
+19 0.00956846721934299
+20 0.015036781767374083
+21 0.020118291858654262
+22 0.025286802351818814
+23 0.030542313246867746
+24 0.035884824543801035
+25 0.037336591918158954
+26 0.04337593580652794
+27 0.0496560559247285
+28 0.05617695227276065
+29 0.0629386248506244
+30 0.06306873802831012
+31 0.06165732096765411
+32 0.06017722714707594
+33 0.05862845656657558
+34 0.05701100922615303
+35 0.057622096636406286
+36 0.05006830814924069
+37 0.04250687528631092
+38 0.03493779804761696
+39 0.027361076433158826
+40 0.023663333320510547
+41 0.01958748161924334
+42 0.015528936602699835
+43 0.011487698270880033
+44 0.007463766623783938
+45 0.0031500934409984943
+46 0.002567107376143588
+47 0.001988549394845807
+48 0.0014144194971051486
+49 0.0008447176829216195
