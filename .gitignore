@@ -3,3 +3,12 @@ test/output/.Rproj.user
 .Rproj.user
 *.png
 .idea
+
+.~lock.*
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# file too big for github
+.experiment 
+
+*/stored_population.csv
