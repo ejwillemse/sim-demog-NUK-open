@@ -41,8 +41,8 @@ def run_test1_2000(popsize_scale):
             e = ex.Experiment(param_file='../../data/processed_dat/params_sg_y2000.cfg', store_iterations=[ i*1 for i in range(21) ])
             e.params['pop_size'] = int(round(e.params['pop_size']*popsize_scale))
             e.params['seed'] = seed
-            e.params['couple_probs'] = pp
-            e.output_path = e.output_path.replace('/y', '/couple_prob/couple_prob_{:.1f}/nonburn_{}_s{}_y'.format(pp, str(popsize_scale), str(seed)))
+            e.params['leaving_prob'] = pp
+            e.output_path = e.output_path.replace('/y', '/leaving_prob/leaving_prob_{:.1f}/nonburn_{}_s{}_y'.format(pp, str(popsize_scale), str(seed)))
             e.output_path = e.output_path.replace('_run_output', '../../sandbox/experiment_output/_run_output')
             #print(e.params.keys())
             e.prepare_simulation()
