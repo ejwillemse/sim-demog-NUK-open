@@ -5,7 +5,7 @@ import random
 
 import population.experiment as ex
 
-#import analyze_hh
+# import analyze_hh
 
 def save_exp(ee, fname):
     print("Saving experiment...")
@@ -28,7 +28,7 @@ def run_test1_1990(popsize_scale):
     e.prepare_simulation()
     e.run_sumulation()
     e.output_results()
-    #save_exp(e, 'test_exp.experiment')
+    # save_exp(e, 'test_exp.experiment')
 
 
 def run_test1_2000(popsize_scale):
@@ -44,12 +44,12 @@ def run_test1_2000(popsize_scale):
             e.params['divorce_prob'] = pp
             e.output_path = e.output_path.replace('/y', '/divorce_prob/divorce_prob_{:.1f}/nonburn_{}_s{}_y'.format(pp, str(popsize_scale), str(seed)))
             e.output_path = e.output_path.replace('_run_output', '../../sandbox/experiment_output/_run_output')
-            #print(e.params.keys())
+
             if os.path.exists(e.output_path): continue
             e.prepare_simulation()
             e.run_sumulation()
             e.output_results()
-            #save_exp(e, 'test_exp.experiment')
+            # save_exp(e, 'test_exp.experiment')
 
 
 def run_test1_2010(popsize_scale):
@@ -59,7 +59,7 @@ def run_test1_2010(popsize_scale):
     e.prepare_simulation()
     e.run_sumulation()
     e.output_results()
-    #save_exp(e, 'test_exp.experiment')
+    # save_exp(e, 'test_exp.experiment')
 
 
 def run_test2():
@@ -69,13 +69,12 @@ def run_test2():
 
 
 if __name__ == '__main__':
-    #print(os.listdir('../data/processed_dat'))
     import time
     t0 = time.time()
     print(t0)
-    #run_test1_1990(popsize_scale=0.02)
+    # run_test1_1990(popsize_scale=0.02)
     run_test1_2000(popsize_scale=0.005)
-    #run_test1_2010(popsize_scale=0.02)
+    # run_test1_2010(popsize_scale=0.02)
     t1 = time.time()
-    #run_test2()
+    # run_test2()
     print('done', 'run using time: {0:.3f}s'.format(t1-t0))

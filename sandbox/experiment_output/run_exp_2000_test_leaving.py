@@ -45,6 +45,7 @@ def run_test1_2000(popsize_scale):
             e.output_path = e.output_path.replace('/y', '/leaving_prob/leaving_prob_{:.1f}/nonburn_{}_s{}_y'.format(pp, str(popsize_scale), str(seed)))
             e.output_path = e.output_path.replace('_run_output', '../../sandbox/experiment_output/_run_output')
             #print(e.params.keys())
+            if os.path.exists(e.output_path): continue
             e.prepare_simulation()
             e.run_sumulation()
             e.output_results()

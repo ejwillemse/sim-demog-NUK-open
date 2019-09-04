@@ -28,6 +28,7 @@ def process_a_household(df_hh):
 
 
 def analyse_household_size_dynamic(df):
+    df['children'] = df['infant'] + df['school_age']
     households = list(set(df.household_id.tolist()))
     all_times = list(set(df['time'].tolist()))
     hh_events = None
@@ -129,6 +130,7 @@ def analyse_household_structure(df, y):
 
 
 def analyse_household_structure_dynamic(df, ys=None):
+    df['children'] = df['infant'] + df['school_age']
     if ys is None:
         all_times = list(set(df['time'].tolist()))
     else:
@@ -144,3 +146,25 @@ def analyse_household_structure_dynamic(df, ys=None):
     return hs_dynamic
 
 
+def main():
+    import os
+    res_base = '_run_output'
+    cat_dirs = sorted(os.listdir(res_base))
+    for cd in cat_dirs:
+        prop_dirs = sorted(os.listdir(os.path.join(res_base, cd)))
+        for rd in prop_dirs:
+            seed_dirs = sorted(os.listdir(os.path.join(res_base, cd, rd)))
+            for sd in seed_dirs:
+                fp = os.path.join(res_base, cd, rd, sd, 'stored_household.csv')
+                df = pd.read_csv(fp, index_col=0)
+                hsize_df = analyse_household_size_dynamic(df)
+                hstruc_df = analyse_household_structure_dynamic(df)
+                fout_size = os.path.join(res_base, cd, rd, sd, 'household_size_dynamic.csv')
+                fout_struc = os.path.join(res_base, cd, rd, sd, 'household_structure_dynamic.csv')
+                hsize_df.to_csv(fout_size, index_label='ind')
+                hstruc_df.to_csv(fout_struc, index_label='ind')
+                print('done:', fp)
+
+
+if __name__ == '__main__':
+    main()
