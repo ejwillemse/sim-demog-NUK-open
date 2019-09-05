@@ -98,15 +98,15 @@ class Experiment(object):
         create_path(os.path.join(self.output_path, 'thumbnails'))
         print("Exporting outputs to...", self.output_path)
         sum_df, pop_py_df, pop_long_df, hh_long_df = self.get_results()
-        f0 = os.path.join(self.output_path, 'yearly_summary.csv')
-        f1 = os.path.join(self.output_path, 'stored_sex_age_stats.csv')
-        f2 = os.path.join(self.output_path, 'stored_population.csv')
-        f3 = os.path.join(self.output_path, 'stored_household.csv')
+        f0 = os.path.join(self.output_path, 'yearly_summary.csv.xz')
+        f1 = os.path.join(self.output_path, 'stored_sex_age_stats.csv.xz')
+        f2 = os.path.join(self.output_path, 'stored_population.csv.xz')
+        f3 = os.path.join(self.output_path, 'stored_household.csv.xz')
 
         tables = [sum_df, pop_py_df, pop_long_df, hh_long_df]
         destinations = [f0, f1, f2, f3]
         for tab, des in zip(tables, destinations):
-            tab.to_csv(des, index_label='ind')
+            tab.to_csv(des, index_label='ind', compression='xz')
 
 
 
