@@ -2,7 +2,7 @@ population/__pycache__
 */__pycache__
 test/output/.Rproj.user
 .Rproj.user
-*.png
+#*.png
 .idea
 
 .~lock.*
