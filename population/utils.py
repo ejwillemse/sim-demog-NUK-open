@@ -20,7 +20,7 @@ def adjust_prob(prob, t_dur):
 #    im = Image.open(filename)
 #    pathname = os.path.split(filename)
 #    outpath = os.path.join(pathname[0], 'thumbnails')
-#    create_path(outpath) 
+#    create_path(outpath)
 #    outfile = os.path.splitext(pathname[1])[0] + '.thumbnail'
 #    im.thumbnail(size, Image.ANTIALIAS)
 #    im.save(os.path.join(outpath, outfile), "JPEG")
@@ -42,7 +42,7 @@ def merge_params(*src_params):
     params = ConfigObj()
     for p in src_params:
         params.merge(p)
-        params.inline_comments = dict(params.inline_comments, 
+        params.inline_comments = dict(params.inline_comments,
                 **p.inline_comments)
     return params
 
@@ -60,17 +60,17 @@ def sample(probs, rng):
     """
     Returns i E [0, len(probs)-1] with probability probs[i]
     """
-    
+
     x = rng.random();  prob_sum = 0.0
     for i in range(0, len(probs)):
         prob_sum += probs[i]
         if prob_sum >= x:
             return i
     # In almost all cases, this loop should return before completing,
-    # as sum(probs) == 1.0 (which is >= x).  If x is very close to 1.0 
-    # however, rounding errors in summing probabilities may mean that     
+    # as sum(probs) == 1.0 (which is >= x).  If x is very close to 1.0
+    # however, rounding errors in summing probabilities may mean that
     # x>sum(probs). Therefore, return final index if this occurs:
-    return len(probs) - 1       
+    return len(probs) - 1
 
 
 def sample_table(table, rng):
@@ -141,10 +141,10 @@ def load_prob_tables(fname):
 
     Used for time-varying probabilities (i.e., fertility by age).
 
-    Returns a dictionary keyed by data_value, with a normal 
+    Returns a dictionary keyed by data_value, with a normal
     prob_0, [data_value] table (as below).
 
-    This isn't particularly optimal, but allows current sampling functions 
+    This isn't particularly optimal, but allows current sampling functions
     to be used unchanged.
     """
 
@@ -266,12 +266,12 @@ def load_prob_list(fname):
 
 def split_age_probs(age_probs, cutoffs):
     """
-    Split age distributions into rescaled distributions over subranges 
+    Split age distributions into rescaled distributions over subranges
     specified by cutoffs.
 
     e.g., if initial age distribution is over range [0, 100] and cutoffs are
     [5, 18], then the function will return three distributions, with ranges
-    [0, 4], [5, 17] and [18, 100], with probabilities summing to 1.0 for 
+    [0, 4], [5, 17] and [18, 100], with probabilities summing to 1.0 for
     each distribution.
     """
 
@@ -311,9 +311,9 @@ def parse_hh_data(ifname, ofname):
         # remove syd and melb columns, collapse working and non-working
         l3 = l2[:2]+[l2[2]+l2[3]]+[l2[6]]
         # collapse all occurrences of >10 to 10
-        if l3[0] >= 10: l3[0] = 10; 
-        if l3[1] >= 10: l3[1] = 10; 
-        if l3[2] >= 10: l3[2] = 10; 
+        if l3[0] >= 10: l3[0] = 10;
+        if l3[1] >= 10: l3[1] = 10;
+        if l3[2] >= 10: l3[2] = 10;
         rawdata.append(l3)
     f.close()
 
@@ -334,4 +334,3 @@ def parse_hh_data(ifname, ofname):
                 if data[i][j][k] > 0:
                     f.write("%g %d %d %d\n" % (data[i][j][k], i, j, k))
     f.close()
-
