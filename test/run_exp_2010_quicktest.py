@@ -43,6 +43,7 @@ def run_test1_2000(popsize_scale):
         e.run_sumulation()
         e.output_results()
         #save_exp(e, 'test_exp.experiment')
+        break
 
 
 def run_test1_2010(popsize_scale):
