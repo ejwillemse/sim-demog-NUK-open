@@ -16,3 +16,14 @@ The original model description is as follows:
   Python libraries required (debian package names) include: python-configobj, python-numpy, python-matplotlib, python cheetah and python-imaging.
   
  The `test/` folder contains different parameter config files, input and output folders. The `population/` file contains the actual code for running the simulation. `data/` is the formal data folder with Singapore based input data, and `docs/` is the formal document folder, with documents related to the project. 
+
+## to install and develop
+
+after clone the repository
+
+```sh
+
+cd sim-demog-NUK-open
+pip install -e .
+
+```
