@@ -2,6 +2,7 @@
 import os
 import pickle
 import random
+import time
 
 import population.experiment as ex
 
@@ -36,6 +37,7 @@ def run_test1_2000(popsize_scale):
     random_seeds = [ random.randint(0, 1000000) for i in range(10) ]
     for seed in random_seeds:
         for p in range(11):
+            t0 = time.time()
             pp = p*0.001 + 0.000
             print(pp)
             e = ex.Experiment(param_file='../../data/processed_dat/params_sg_y2000.cfg', store_iterations=[ i*1 for i in range(21) ])
@@ -50,6 +52,8 @@ def run_test1_2000(popsize_scale):
             e.run_sumulation()
             e.output_results()
             #save_exp(e, 'test_exp.experiment')
+            t1 = time.time()
+            print('run using time: {0:.3f}s'.format(t1-t0))
 
 
 def run_test1_2010(popsize_scale):
