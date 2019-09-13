@@ -28,7 +28,4 @@ venv.bak/
 ## will upload the 7z compress results to sandbox/experiment_output/compress
 sandbox/experiment_output/__pycache__/
 sandbox/experiment_output/_compress/
-sandbox/experiment_output/_run_output/
-sandbox/experiment_output/_run_output_2/
-sandbox/experiment_output/_run_output_3/
 
