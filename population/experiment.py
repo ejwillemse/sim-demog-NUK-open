@@ -107,7 +107,3 @@ class Experiment(object):
         destinations = [f0, f1, f2, f3]
         for tab, des in zip(tables, destinations):
             tab.to_csv(des, index_label='ind', compression='xz')
-
-
-
-
