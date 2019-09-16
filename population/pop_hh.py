@@ -1,6 +1,6 @@
 """
-A population class in which *households* are a fundamental unit of 
-organisation.  
+A population class in which *households* are a fundamental unit of
+organisation.
 """
 
 import itertools
@@ -13,7 +13,7 @@ from .utils import sample_table, split_age_probs
 
 class Pop_HH(Population):
     """
-    A population class in which *households* are a fundamental unit of organisation.  
+    A population class in which *households* are a fundamental unit of organisation.
 
     :param ind_type: the :class:`individual.Individual` (sub)class stored by this population.
     :type ind_type: class
@@ -58,7 +58,7 @@ class Pop_HH(Population):
 
     def duplicate_household(self, t, hh_id):
         """
-        Create a duplicate of household hh_id, consisting of 
+        Create a duplicate of household hh_id, consisting of
         new individuals with same household age composition.
 
         Return id of newly created household.
@@ -72,7 +72,7 @@ class Pop_HH(Population):
 
         new_hh = []
         for ind in self.groups['household'][hh_id]:
-            new_ind = self.add_individual(ind.age, ind.sex, 
+            new_ind = self.add_individual(ind.age, ind.sex,
                     logging=self.logging)
             if self.logging:
                 new_ind.add_log(t, 'i', "Individual (immigrated)")
@@ -131,7 +131,7 @@ class Pop_HH(Population):
                     len(self.groups['household'][hh_id]))
 
         return new_ind
-    
+
 
     def death(self, t, ind):
         """
@@ -164,8 +164,8 @@ class Pop_HH(Population):
         # remove the dead individual's guardian(s)
         self._remove_from_guardians(t, ind, \
                 'cd', "Lost dependent %d (death)" % ind.ID)
- 
-        # remove dead individual from household and population 
+
+        # remove dead individual from household and population
         self._remove_individual_from_hh(t, ind, 'd', "Member died")
         self.remove_individual(ind)
 
@@ -190,7 +190,7 @@ class Pop_HH(Population):
 
     def form_couple(self, t, ind, partner):
         """
-        Attempt to form a new couple household.  A new couple household is 
+        Attempt to form a new couple household.  A new couple household is
         only formed if a suitable partner can be found.
 
         Return a tuple containing the individual whose household the couple
@@ -199,7 +199,7 @@ class Pop_HH(Population):
         :param t: the current time step.
         :type t: int
         """
-    
+
         assert not ind.partner and not partner.partner
         assert ind.groups['household'] != partner.groups['household']
 
@@ -212,7 +212,7 @@ class Pop_HH(Population):
             partner.add_log(t, 'm', "Marriage to %d" % ind.ID, ind.ID)
 
         # TODO: rather than call sep functions, use this logic to set
-        # a target_hh ID variable; if function called with None, then 
+        # a target_hh ID variable; if function called with None, then
         # create a new household, otherwise use this (and don't add
         # existing individuals to moving list.
         if ind.with_parents:
@@ -220,13 +220,13 @@ class Pop_HH(Population):
                 # both individuals live at home, create a new hh
                 return None, self._form_couple_hh(t, [ind, partner])
             else: # partner has own hh, move into it
-                return partner, self._merge_hh(t, [ind, partner], 
+                return partner, self._merge_hh(t, [ind, partner],
                         partner.groups['household'])
         else: # ind has own hh
             if partner.with_parents or \
                     self.hh_size(ind) > self.hh_size(partner):
                 # partner lives at home, or in a smaller household than ind
-                return ind, self._merge_hh(t, [partner, ind], 
+                return ind, self._merge_hh(t, [partner, ind],
                         ind.groups['household'])
             else:
                 # ind lives in a smaller household than partner
@@ -237,7 +237,7 @@ class Pop_HH(Population):
     def separate_couple(self, t, ind):
         """
         Separate the couple involving the specified individual, moving their
-        partner into a new, single-person household.  Children remain in the 
+        partner into a new, single-person household.  Children remain in the
         original household.
 
         :param t: The current time step.
@@ -341,7 +341,7 @@ class Pop_HH(Population):
         while tgt_hh == cur_hh: tgt_hh = rng.sample(candidates, 1)[0]
 
         # appoint eldest person in new household and partner as guardians
-        g_ind = sorted(self.groups['household'][tgt_hh], 
+        g_ind = sorted(self.groups['household'][tgt_hh],
                 key=lambda x: x.age)[-1]
         g_ind.deps.append(ind)
         if g_ind.partner:
@@ -355,7 +355,7 @@ class Pop_HH(Population):
         if self.logging:
             g_ind.add_log(t, 'c+', "Gained dependent %d (orphan)" % ind.ID)
             if g_ind.partner:
-                g_ind.partner.add_log(t, 'c+', 
+                g_ind.partner.add_log(t, 'c+',
                         "Gained dependent %d (orphan)" % ind.ID)
             self.households[tgt_hh].add_log(t, 'c+', "Gained relocated child",
                     len(self.groups['household'][tgt_hh]))
@@ -400,7 +400,7 @@ class Pop_HH(Population):
         self._remove_from_guardians(t, ind, \
                 'c-', "Lost dependent %d (leaving)" % ind.ID, ind.ID)
 
-        # remove from old household 
+        # remove from old household
         self._remove_individual_from_hh(t, ind, 'l', "Individual left")
 
         # add to newly created household
@@ -443,14 +443,14 @@ class Pop_HH(Population):
         # remove any guardians of moving partner
         self._remove_from_guardians(t, inds[0], \
                 'c-', "Lost dependent %d (leaving)" % inds[0].ID, inds[0].ID)
-        
+
         for ind in new_inds:
             self._remove_individual_from_hh(t, ind, 'l', "Individual left")
-       
+
         self.add_individuals_to_group('household', hh_id, new_inds)
 
         if self.logging:
-            inds[0].add_log(t, 'l2', 
+            inds[0].add_log(t, 'l2',
                     "Leaving household - couple with %d"%inds[1].ID, inds[1].ID)
             self.households[hh_id].add_log(t, 'm', \
                     "Household merged (%d individuals)" % len(new_inds),
@@ -461,8 +461,8 @@ class Pop_HH(Population):
 
     def _form_couple_hh(self, t, inds):
         """
-        Make specified single individuals into a couple and move them into a 
-        new household.  Any dependents of either individual accompany them to 
+        Make specified single individuals into a couple and move them into a
+        new household.  Any dependents of either individual accompany them to
         the new household.
 
         :param t: the current time step.
@@ -489,7 +489,7 @@ class Pop_HH(Population):
                 'c-', "Lost dependent %d (leaving)" % inds[0].ID, inds[0].ID)
         self._remove_from_guardians(t, inds[1], \
                 'c-', "Lost dependent %d (leaving)" % inds[1].ID, inds[1].ID)
-       
+
         # remove individuals from prior households and create new household
         for ind in new_inds:
             self._remove_individual_from_hh(t, ind, 'l', "Individual left")
@@ -520,7 +520,7 @@ class Pop_HH(Population):
 
     def sample_by_age(self, age, size, rng):
         """DEPRECATED"""
-        
+
         subset = rng.sample(list(self.I.values()), size) \
                 if len(self.I) > size else list(self.I.values())
         return self.individuals_by_age(age, age, subset)
@@ -555,10 +555,10 @@ class Pop_HH(Population):
                 (ind.ID, ind.age, ind.groups))
 
 #        print '%d %d %s P(%s %s %s) %d %s D%s H%s\n' % \
-#                (ind.ID, ind.age, ind.groups, ind.parents, 
-#                self.I.has_key(ind.parents[0]) if ind.parents else -1, 
-#                self.I.has_key(ind.parents[1]) if ind.parents else -1, 
-#                ind.partner.ID, ind.divorced, ind.deps, 
+#                (ind.ID, ind.age, ind.groups, ind.parents,
+#                self.I.has_key(ind.parents[0]) if ind.parents else -1,
+#                self.I.has_key(ind.parents[1]) if ind.parents else -1,
+#                ind.partner.ID, ind.divorced, ind.deps,
 #                self.hh_members(ind))
 
 
@@ -575,14 +575,14 @@ class Pop_HH(Population):
         - with parents
 
         Future types should include (at least, maybe):
-        
+
         - group household
 
         :returns: A dictionary mapping household type to a list of individuals
         belonging to a household of that type.
         """
 
-        stats = {'single_only':[], 'couple_only':[], 
+        stats = {'single_only':[], 'couple_only':[],
                 'single_kids':[], 'couple_kids':[],
                 'with_parents':[]}
 
@@ -606,7 +606,7 @@ class Pop_HH(Population):
 
         return stats
 
-    
+
     def get_hh_type(self, ind):
         hh = self.hh_members(ind)
         if len(hh) == 0:
@@ -632,16 +632,16 @@ class Pop_HH(Population):
 
     def sum_hh_stats_group(self):
 
-        hh_stats = {'couple_kids':0, 'couple_only':0, 
+        hh_stats = {'couple_kids':0, 'couple_only':0,
                 'single_kids':0, 'single_only':0}
-        
+
         for k, cur_hh in list(self.groups['household'].items()):
             hh_type = 'with_parents'
             for cur_ind in cur_hh:
                 cur_type = self.get_hh_type(cur_ind)
                 if cur_type != 'with_parents':
                     hh_type = cur_type
-                
+
             hh_stats[hh_type] += 1
         del hh_stats['single_only']
         fam_count = sum([v for v in list(hh_stats.values())])
@@ -712,7 +712,7 @@ class Pop_HH(Population):
         num_children = 0 if num_parents is 0 else \
                 self.hh_size(ind) - num_parents - 1
         return num_parents, num_children
-        
+
 
 
     ### Population generation functions #######################################
@@ -729,7 +729,7 @@ class Pop_HH(Population):
         :type rng: :class:`random.Random`
         """
 
-        i = 0  
+        i = 0
         while i < pop_size:
             size = int(sample_table(hh_probs, rng)[0])
             cur_hh = []
@@ -740,13 +740,13 @@ class Pop_HH(Population):
             self.add_group('household', cur_hh)
 
 
-    def gen_hh_age_structured_pop(self, pop_size, hh_probs, age_probs_i,     
+    def gen_hh_age_structured_pop(self, pop_size, hh_probs, age_probs_i,
             cutoffs, rng):
         """
-        Generate a population of individuals with age structure and household 
+        Generate a population of individuals with age structure and household
         composition.
 
-        Household composition here is approximated by the number of 
+        Household composition here is approximated by the number of
         individuals who are:
 
         - pre-school age (0--4)
@@ -780,7 +780,7 @@ class Pop_HH(Population):
                 for _ in itertools.repeat(None, cur_hh_type):
                     sex = rng.randint(0, 1)
                     cur_age = sample_table(cur_prob, rng)
-                    cur_ind = self.add_individual(cur_age, sex, 
+                    cur_ind = self.add_individual(cur_age, sex,
                             adam=True, logging=self.logging)
                     if self.logging:
                         cur_ind.add_log(0, 'f', "Individual (bootstrap)")
@@ -800,7 +800,7 @@ class Pop_HH(Population):
         cur_hh = []
         for i in range(hh_size):
             sex = rng.randint(0, 1)
-            cur_ind = self.add_individual(20, sex, 
+            cur_ind = self.add_individual(20, sex,
                     adam=True, logging=self.logging)
             if self.logging:
                 cur_ind.add_log(0, 'f', "Individual (bootstrap)")
@@ -816,11 +816,11 @@ class Pop_HH(Population):
         """
         For testing/bootstrapping: given a household-structured population,
         for all households containing two or more people who are 18 or older,
-        form the two oldest members of the household into a couple and 
+        form the two oldest members of the household into a couple and
         make remaining members dependents of the household head(s).
 
         There is a rather ugly hack here at the moment to prevent a couple
-        being created with a dependent who is the same age.  Initial hh 
+        being created with a dependent who is the same age.  Initial hh
         allocation possibly needs to be a touch more elegant.
         """
 
@@ -829,24 +829,24 @@ class Pop_HH(Population):
 
 
 
-
+    """
     def _init_household(self, cur_hh):
-        """
-        Bootstrap initial household relationships; making two eldest individuals
-        partners (if > 17 years).
-
-        Modifies ages if having two individuals of equal age is likely to cause
-        problems (usually for reallocate orphans).
-
-        Again, a fairly ugly hack at the moment.
-        """
+        #
+        # Bootstrap initial household relationships; making two eldest individuals
+        # partners (if > 17 years).
+        #
+        # Modifies ages if having two individuals of equal age is likely to cause
+        # problems (usually for reallocate orphans).
+        #
+        # Again, a fairly ugly hack at the moment.
+        #
 
         hh_size = len(self.groups['household'][cur_hh])
         if hh_size == 1:
             self.groups['household'][cur_hh][0].with_parents = False
-#            print "@ household of size 1"
-#            print "#0 (%d)"%(self.groups['household'][cur_hh][0].age), \
-#                    self.groups['household'][cur_hh][0].with_parents
+            # print "@ household of size 1"
+            # print "#0 (%d)"%(self.groups['household'][cur_hh][0].age), \
+            # self.groups['household'][cur_hh][0].with_parents
         else:
             sorted_by_age = sorted(self.groups['household'][cur_hh],
                     key=lambda x: x.age, reverse=True)
@@ -871,19 +871,70 @@ class Pop_HH(Population):
             else:
                 sorted_by_age[0].deps = sorted_by_age[1:]
                 sorted_by_age[0].with_parents = False
-#            print "@ household of size", len(sorted_by_age)
-#            for i, xx in enumerate(sorted_by_age):
-#                print "#%d -- %d -- (%d)"%(i, xx.ID, xx.age), xx.with_parents, 
-#                if xx.partner:
-#                    print xx.partner.ID
-#                else:
-#                    print ""
+            # print "@ household of size", len(sorted_by_age)
+            # for i, xx in enumerate(sorted_by_age):
+            #     print "#%d -- %d -- (%d)"%(i, xx.ID, xx.age), xx.with_parents,
+            #     if xx.partner:
+            #         print xx.partner.ID
+            #     else:
+            #         print ""
 
+    """
+
+    def _init_household(self, cur_hh):
+        #
+        # Bootstrap initial household relationships; making two eldest individuals
+        # partners (if > 17 years).
+        #
+        # Modifies ages if having two individuals of equal age is likely to cause
+        # problems (usually for reallocate orphans).
+        #
+        # Again, a fairly ugly hack at the moment.
+        #
+
+        hh_size = len(self.groups['household'][cur_hh])
+        if hh_size == 1:
+            self.groups['household'][cur_hh][0].with_parents = False
+            # print "@ household of size 1"
+            # print "#0 (%d)"%(self.groups['household'][cur_hh][0].age), \
+            # self.groups['household'][cur_hh][0].with_parents
+        else:
+            sorted_by_age = sorted(self.groups['household'][cur_hh],
+                    key=lambda x: x.age, reverse=True)
+
+            if hh_size > 2 and sorted_by_age[1].age == sorted_by_age[2].age and sorted_by_age[1].age>17:
+                del self.I_by_age[sorted_by_age[2].age][sorted_by_age[2].ID]
+                sorted_by_age[2].age -= 1
+                self.I_by_age[sorted_by_age[2].age][sorted_by_age[2].ID] = sorted_by_age[2]
+                if self.logging:
+                    sorted_by_age[2].log[0]['age'] = sorted_by_age[2].age
+            if sorted_by_age[0].age == sorted_by_age[1].age and sorted_by_age[1].age>17:
+                del self.I_by_age[sorted_by_age[0].age][sorted_by_age[0].ID]
+                sorted_by_age[0].age += 1
+                self.I_by_age[sorted_by_age[0].age][sorted_by_age[0].ID] = sorted_by_age[0]
+                if self.logging:
+                    sorted_by_age[0].log[0]['age'] = sorted_by_age[0].age
+            if sorted_by_age[1].age > 17:
+                self._form_couple_no_hh(sorted_by_age[:2])
+                sorted_by_age[0].deps = sorted_by_age[2:]
+                sorted_by_age[1].deps = sorted_by_age[2:]
+                sorted_by_age[0].with_parents = False
+                sorted_by_age[1].with_parents = False
+            else:
+                sorted_by_age[0].deps = sorted_by_age[1:]
+                sorted_by_age[0].with_parents = False
+            # print "@ household of size", len(sorted_by_age)
+            # for i, xx in enumerate(sorted_by_age):
+            #     print "#%d -- %d -- (%d)"%(i, xx.ID, xx.age), xx.with_parents,
+            #     if xx.partner:
+            #         print xx.partner.ID
+            #     else:
+            #         print ""
 
 
     def _form_couple_no_hh(self, inds):
         """
-        For testing/bootstrapping: forms a couple (as above), but sets 
+        For testing/bootstrapping: forms a couple (as above), but sets
         ind.partner fields without modifying households.
         """
 
@@ -951,7 +1002,7 @@ class Pop_HH(Population):
 
 #    def immigration(self, t, age=20, sex=0):
 #        """
-#        Add a new (infected) immigrant - 
+#        Add a new (infected) immigrant -
 #        NB: not currently used
 #        """
 #
@@ -963,6 +1014,3 @@ class Pop_HH(Population):
 #                "Household formed (migrant %s, aged %d" \
 #                % ('m' if sex==0 else 'f', age), 1)
 #        return new_id
-    
-
-

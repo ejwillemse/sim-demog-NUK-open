@@ -57,7 +57,17 @@ class Experiment(object):
         #print('\t'.join(['years', 'days', 'no. individuals', 'no. births', 'no. deaths', 'no. immigrants']))
         cols = ['years', 'days', 'no_individuals', 'no_births', 'no_deaths', 'no_immigrants']
         self.sum_dic = {}
-        self.pop_py = []
+        #self.pop_py = []
+
+        y = -1
+        t = y * self.params['t_dur']
+        vals =  [y, t, len(self.sim.P.I), 0, 0, 0]
+        self.sum_dic[y] = { k:v for k,v in zip(cols, vals) }
+        #sim.record_stats_demo(t)
+        self.sim.save_demog_stats(y)
+        self.sim.save_population(y)
+        self.sim.save_households(y)
+
         self.sim.start_time = time.time()
         for y in tqdm(range(self.timesteps), desc='Updating years'):
             is_burn = y<self.params['demo_burn']
@@ -65,7 +75,7 @@ class Experiment(object):
             # y=year, t=day
             b,d,im,bd = self.sim.update_all_demo(t, burn_flag=is_burn)
             #print('\t'.join([ str(x) for x in [i, t, len(sim.P.I), len(b), len(d), len(im)]]))
-            vals=  [y, t, len(self.sim.P.I), len(b), len(d), len(im)]
+            vals =  [y, t, len(self.sim.P.I), len(b), len(d), len(im)]
             self.sum_dic[y] = { k:v for k,v in zip(cols, vals) }
             #sim.record_stats_demo(t)
             if y in self.store_iterations:

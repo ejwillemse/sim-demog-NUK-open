@@ -45,14 +45,14 @@ class Simulation(object):
         self.hh_pd = []
         self.pop_py = []
 
-    def create_population(self, ind_type, logging=True):
+    def create_population(self, ind_type, logging=False):
         """
         Create a population according to specified age and household size
         distributions.
         """
 
         self.P = Pop_HH(ind_type, logging)
-        self.P.gen_hh_age_structured_pop(self.params['pop_size'], self.hh_comp, 
+        self.P.gen_hh_age_structured_pop(self.params['pop_size'], self.hh_comp,
                 self.age_dist, self.params['age_cutoffs'], self.rng)
         self.P.allocate_couples()
         self.P.print_population_summary()
@@ -60,10 +60,10 @@ class Simulation(object):
 
     def parse_age_rates(self, filename, factor, final):
         """
-        Parse an age-year-rate table to produce a dictionary, keyed by age, 
+        Parse an age-year-rate table to produce a dictionary, keyed by age,
         with each entry being a list of annual rates (by year).
-        
-        Setting final to 'True' appends an age 100 rate of >1 (e.g., to 
+
+        Setting final to 'True' appends an age 100 rate of >1 (e.g., to
         ensure everyone dies!
         """
 
@@ -83,11 +83,11 @@ class Simulation(object):
         """
 
         # load household size distribution and age distribution
-        self.hh_comp = load_probs(os.path.join(self.params['resource_prefix'], 
+        self.hh_comp = load_probs(os.path.join(self.params['resource_prefix'],
                     self.params['hh_composition']), False)
         self.params['age_cutoffs'] = [int(x) for x in self.hh_comp[0][1:][0]]  # yuk!
         self.params['adult_age'] = int(float(self.params['adult_age']))
-        self.age_dist = load_probs(os.path.join(self.params['resource_prefix'], 
+        self.age_dist = load_probs(os.path.join(self.params['resource_prefix'],
                     self.params['age_distribution']))
 
         annual_factor = self.params['t_dur']/365.0
@@ -95,15 +95,15 @@ class Simulation(object):
         # load and scale MORTALITY rates
         self.death_rates = {}
         self.death_rates[0] = self.parse_age_rates(os.path.join(
-            self.params['resource_prefix'], 
+            self.params['resource_prefix'],
             self.params['death_rates_m']), annual_factor, True)
         self.death_rates[1] = self.parse_age_rates(os.path.join(
-            self.params['resource_prefix'], 
+            self.params['resource_prefix'],
             self.params['death_rates_f']), annual_factor, True)
 
         ### load FERTILITY age probs (don't require scaling) for closed pops
         self.fertility_age_probs = load_prob_tables(os.path.join(
-            self.params['resource_prefix'], 
+            self.params['resource_prefix'],
             self.params['fertility_age_probs']))
         self.fertility_parity_probs = None
         #load_probs_new(os.path.join(
@@ -132,15 +132,15 @@ class Simulation(object):
             self.params['imm_rates'] = load_prob_list(os.path.join(
                 self.params['resource_prefix'], self.params['imm_rate_file']))
 
-            self.params_adj['leaving_probs'] = [adjust_prob(x, self.params['t_dur']) 
+            self.params_adj['leaving_probs'] = [adjust_prob(x, self.params['t_dur'])
                 for x in self.params['leaving_probs']]
-            self.params_adj['couple_probs'] = [adjust_prob(x, self.params['t_dur']) 
+            self.params_adj['couple_probs'] = [adjust_prob(x, self.params['t_dur'])
                 for x in self.params['couple_probs']]
-            self.params_adj['divorce_probs'] = [adjust_prob(x, self.params['t_dur']) 
+            self.params_adj['divorce_probs'] = [adjust_prob(x, self.params['t_dur'])
                 for x in self.params['divorce_probs']]
-            self.params_adj['growth_rates'] = [adjust_prob(x, self.params['t_dur']) 
+            self.params_adj['growth_rates'] = [adjust_prob(x, self.params['t_dur'])
                 for x in self.params['growth_rates']]
-            self.params_adj['imm_rates'] = [adjust_prob(x, self.params['t_dur']) 
+            self.params_adj['imm_rates'] = [adjust_prob(x, self.params['t_dur'])
                 for x in self.params['imm_rates']]
 
             self.dyn_years = min(len(self.death_rates[0][0])-1, len(self.fertility_age_probs)-1,
@@ -178,7 +178,7 @@ class Simulation(object):
         couple_prob = self.params_adj['couple_probs'][index]
 #        if ind.divorced and ind.deps: couple_prob *= 0.5
 
-        # DEATH / BIRTH: 
+        # DEATH / BIRTH:
         # TODO immediate: prevent birth from automatically occuring at death # NOTE ben: done
         if self.rng.random() > exp(-self.death_rates[ind.sex][ind.age][index]):
             death = ind
@@ -349,12 +349,12 @@ class Simulation(object):
         if ind:
             orphans = self.P.death(t, ind)
             self.P.process_orphans(t, orphans, float(self.params['adult_age']), self.rng)
-        
+
         if mother:
             sex = self.rng.randint(0, 1)
             new_ind = self.P.birth(t, self.rng, mother, mother.partner, sex)
             return new_ind
-        
+
         return None
 
 
@@ -370,14 +370,14 @@ class Simulation(object):
         deaths = []; births = []
 
         # calculate index for fertility and mortality rates
-        # basically: use first entry for burn-in, then one entry every 
+        # basically: use first entry for burn-in, then one entry every
         # 'period' years, then use the final entry for any remaining years.
-        index = min(max(0, (t - (self.params['demo_burn']*365)) / 
+        index = min(max(0, (t - (self.params['demo_burn']*365)) /
                 (self.params['demo_period']*365)), self.dyn_years) \
                         if self.params['dyn_rates'] else 0
 
         cur_inds = list(self.P.I.values())
-        for ind in cur_inds: 
+        for ind in cur_inds:
             death, birth = self.update_individual_demo(t, ind, index, burn_flag=burn_flag)
             if death: deaths.append(death)
             if birth: births.append(birth)
@@ -410,7 +410,7 @@ class Simulation(object):
     def record_stats_demo(self, t):
         if self.params['record_interval'] <= 0 or t%self.params['record_interval'] is not 0:
             return
-        
+
         self.pop_size.append(len(self.P.I))
         self.age_dist.append(self.P.age_dist(101,101)[0])
         self.hh_size_dist.append(self.P.group_size_dist('household', self.max_hh)[0])
@@ -550,6 +550,7 @@ class Simulation(object):
         # records the demographic (pyramid) stats on t
         pop_pyramid = { sex:{ i:0 for i in range(102) } for sex in [0,1] }
         for k, ind in self.P.I.items():
+            #print(ind.sex, ind.age)
             pop_pyramid[ind.sex][ind.age]+=1
         age_list = []
         for age, male in pop_pyramid[0].items():
@@ -577,7 +578,3 @@ class Simulation(object):
             print(i, t)
             self.update_all_demo(t)
             i += 1
- 
-
-
-
