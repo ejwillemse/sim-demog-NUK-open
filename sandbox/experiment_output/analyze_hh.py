@@ -1,7 +1,13 @@
 
+import argparse
 from tqdm import tqdm
 import pandas as pd
+import os
 
+
+def counting_total_hh(df):
+    df2 = df.groupby('time')['household_id'].count().reset_index(name='no_household')
+    return df2
 
 def process_a_household(df_hh):
     df_hh = df_hh.sort_values('time')
@@ -62,23 +68,23 @@ def analyse_household_size_dynamic(df):
 simple version with same meaning
 
 $$
-R = \big\{ household ~|~ at~least~one~member~with~age~ \geq 65 \big\} 
+R = \big\{ household ~|~ at~least~one~member~with~age~ \geq 65 \big\}
 $$
 
 $$
-A = \big\{ household ~|~ at~least~one~member~with~age~in~between~  \geq 18 ~and~ < 65 \big\} 
+A = \big\{ household ~|~ at~least~one~member~with~age~in~between~  \geq 18 ~and~ < 65 \big\}
 $$
 
 $$
-C = \big\{ household ~|~ at~least~one~member~with~age~ < 18 \big\} 
+C = \big\{ household ~|~ at~least~one~member~with~age~ < 18 \big\}
 $$
 
 $$
-type~I = R \setminus \big( A \cup C \big) 
+type~I = R \setminus \big( A \cup C \big)
 $$
 
 $$
-type~II = A \setminus \big( A \cup C \big) 
+type~II = A \setminus \big( A \cup C \big)
 $$
 
 $$
@@ -90,7 +96,7 @@ type~IV = R \cap C \setminus A
 $$
 
 $$
-type~V = A \cap C \setminus R 
+type~V = A \cap C \setminus R
 $$
 
 $$
@@ -145,9 +151,8 @@ def analyse_household_structure_dynamic(df, ys=None):
     hs_dynamic = hs_dynamic.reset_index()
     return hs_dynamic
 
-
-def main():
-    import os
+"""
+def main2():
     res_base = '_run_output'
     cat_dirs = sorted(os.listdir(res_base))
     for cd in cat_dirs:
@@ -155,16 +160,67 @@ def main():
         for rd in prop_dirs:
             seed_dirs = sorted(os.listdir(os.path.join(res_base, cd, rd)))
             for sd in seed_dirs:
-                fp = os.path.join(res_base, cd, rd, sd, 'stored_household.csv')
-                fout_size = os.path.join(res_base, cd, rd, sd, 'household_size_dynamic.csv')
-                fout_struc = os.path.join(res_base, cd, rd, sd, 'household_structure_dynamic.csv')
+                fp = os.path.join(res_base, cd, rd, sd, 'stored_household.csv.xz')
+                fout_size = os.path.join(res_base, cd, rd, sd, 'household_size_dynamic.csv.xz')
+                fout_struc = os.path.join(res_base, cd, rd, sd, 'household_structure_dynamic.csv.xz')
+                fout_sum = os.path.join(res_base, cd, rd, sd, 'summary_household.csv.xz')
                 if os.path.exists(fout_struc): continue
                 df = pd.read_csv(fp, index_col=0)
                 hsize_df = analyse_household_size_dynamic(df)
                 hstruc_df = analyse_household_structure_dynamic(df)
-                hsize_df.to_csv(fout_size, index_label='ind')
-                hstruc_df.to_csv(fout_struc, index_label='ind')
+                hhsum_df = counting_total_hh(df)
+                hsize_df.to_csv(fout_size, index_label='ind', compression='xz')
+                hstruc_df.to_csv(fout_struc, index_label='ind', compression='xz')
+                hhsum_df.to_csv(fout_sum, index_label='ind', compression='xz')
                 print('done:', fp)
+"""
+
+
+def process_one_file(fp, target_file):
+    fout_size = fp.replace(target_file, 'household_size_dynamic.csv.xz')
+    fout_struc = fp.replace(target_file, 'household_structure_dynamic.csv.xz')
+    fout_sum = fp.replace(target_file, 'summary_household.csv.xz')
+
+    if os.path.exists(fout_struc):
+        print('done before with this file {}'.format(fp))
+    else:
+        df = pd.read_csv(fp, index_col=0)
+        hsize_df = analyse_household_size_dynamic(df)
+        hstruc_df = analyse_household_structure_dynamic(df)
+        hhsum_df = counting_total_hh(df)
+        hsize_df.to_csv(fout_size, index_label='ind', compression='xz')
+        hstruc_df.to_csv(fout_struc, index_label='ind', compression='xz')
+        hhsum_df.to_csv(fout_sum, index_label='ind', compression='xz')
+        print('done processing {}'.format(fp))
+
+
+def walk_search(dirpath, target_file):
+    fps = []
+    for root, dirs, files in os.walk(dirpath):
+        path = root.split(os.sep)
+        #print((len(path) - 1) * '---', os.path.basename(root))
+        for file in files:
+            #print(len(path) * '---', file)
+            fp = os.path.join(root, file)
+            if file==target_file:
+                fps.append(fp)
+    return fps
+
+
+def process_command():
+    parser = argparse.ArgumentParser(prog='analyzing results', description='Processing some basic analysis and generate output csv results')
+    parser.add_argument('--dir', help='targeted directory, will walk into the directory to look for stored_household.csv.xz')
+    return parser.parse_args()
+
+
+def main():
+    args = process_command()
+    #print(args.dir)
+
+    target_file = 'stored_household.csv.xz'
+    fs = walk_search(args.dir, target_file)
+    for fp in fs:
+        process_one_file(fp, target_file)
 
 
 if __name__ == '__main__':
