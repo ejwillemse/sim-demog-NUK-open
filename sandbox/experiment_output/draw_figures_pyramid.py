@@ -74,3 +74,4 @@ if __name__ == '__main__':
     #cats = ['divorce_prob', 'leaving_prob']
     for cat in cats:
         process_cat(cat, target_file)
+    print('---done---')
