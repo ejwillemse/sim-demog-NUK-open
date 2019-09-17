@@ -63,6 +63,9 @@ def make_fig(year, cat, dfs):
     plt.tight_layout()
 
     fname = 'res_figs/popyramid_{}_ag/fig_poppyramid_{}_{}.png'.format(cat, str(year), cat)
+    outdir = os.path.dirname(fname)
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
     plt.savefig(fname, dpi=92, bbox_inches='tight')
     plt.close()
 
@@ -76,6 +79,7 @@ def process_cat(cat, target_file):
         print('making figure {} {}'.format(cat, year))
         make_fig(year, cat, dfs)
 
+
 if __name__ == '__main__':
     target_file = 'stored_sex_age_stats.csv.xz'
 
@@ -83,3 +87,4 @@ if __name__ == '__main__':
     #cats = ['divorce_prob', 'leaving_prob']
     for cat in cats:
         process_cat(cat, target_file)
+    print('---done---')
