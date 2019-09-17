@@ -26,9 +26,6 @@ class Experiment(object):
         self.store_iterations = store_iterations
         print('experiment store snapshots for these years: {}'.format(','.join([str(y) for y in store_iterations])))
         self.params = self._load_params(param_file)
-        self.timesteps = self.params['years'] * floor(365.0/self.params['t_dur'])
-        self.burn_steps = self.params['demo_burn'] * floor(365.0/self.params['t_dur'])
-        self.sim_timesteps = self.timesteps - self.burn_steps
 
 
     def _load_params(self, param_file):
@@ -50,7 +47,9 @@ class Experiment(object):
     def prepare_simulation(self):
         print("Creating population...")
         self.sim = Simulation(self.params, ind_type=Individual, create_pop=True)
-
+        self.timesteps = self.params['years'] * floor(365.0/self.params['t_dur'])
+        self.burn_steps = self.params['demo_burn'] * floor(365.0/self.params['t_dur'])
+        self.sim_timesteps = self.timesteps - self.burn_steps
 
     def run_sumulation(self):
         print("Running simulation...")
