@@ -51,6 +51,9 @@ def make_fig(year, cat, dfs):
     plt.tight_layout()
 
     fname = 'res_figs/popyramid_{}/fig_poppyramid_{}_{}.png'.format(cat, str(year), cat)
+    outdir = os.path.dirname(fname)
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
     plt.savefig(fname, dpi=92, bbox_inches='tight')
     plt.close()
 
@@ -60,7 +63,7 @@ def process_cat(cat, target_file):
     print('reading file')
     dfs = get_dfs(cats[0], target_file)
 
-    for year in range(21):
+    for year in sorted(list(set(dfs[1]['time'].tolist()))):
         print('making figure {} {}'.format(cat, year))
         make_fig(year, cat, dfs)
 

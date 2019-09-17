@@ -4,80 +4,77 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 #from tqdm import tqdm
 
-import read_txz as txz
 
-basedir = 'compress'
-all_fs = sorted(os.listdir(basedir))
-#all_fs
-
-group_fs = {}
-for f in all_fs:
-    ff = f.split('-')
-    cat = ff[1]
-    pset = ff[2].split('_')[-1]
-    dn = ff[0].split('_')
-    if len(dn)<4:
-        dd = 1
-    else:
-        dd = int(float(dn[3]))
-    #print(dd)
-    #seed = ff[3].split('_')[2]
-    if not(cat in group_fs): group_fs[cat] = {}
-    if not(dd in group_fs[cat]): group_fs[cat][dd] = {}
-    if not(pset in group_fs[cat][dd]): group_fs[cat][dd][pset] = []
-    group_fs[cat][dd][pset].append(f)
-    #print(seed)
-    #break
-
-def process_cat(cat):
-    #cat = 'couple_prob'
-    print('reading file')
+def get_dfs(cat, target_file):
+    ds = [1, 2, 3]
+    #group_fs = { dd:{} for dd in ds }
     dfs = {1:None, 2:None, 3:None}
-    for dlvl, probs in group_fs[cat].items():
-        this_df = None
-        #print(probs)
-        for catp, v in probs.items():
-            for f in v:
-                fp = os.path.join(basedir, f)
-                ff = f.split('-')
-                seed = ff[3].split('_')[2]
-                df = txz.read_df_from_txz(fp, 'household_structure_dynamic.csv')
-                df['detail_level'] = dlvl
-                df[cat] = float(catp)
+    for dd in ds:
+        basedir = '_run_output_{}'.format(str(dd))
+        pdirs = sorted(os.listdir(os.path.join(basedir, cat)))
+        #print(pdirs)
+        for pdir in pdirs:
+            pset = pdir.split('_')[-1]
+            #print(pset)
+            seeds = sorted(os.listdir(os.path.join(basedir, cat, pdir)))
+            #print(seeds)
+            for sr in seeds:
+                fp = os.path.join(basedir, cat, pdir, sr, target_file)
+                #print(fp)
+                seed = sr.split('_')[2]
+                df = pd.read_csv(fp)
+                df['prob'] = float(pset)
                 df['seed'] = seed
-                if this_df is None:
-                    this_df = df
+                df['detail_level'] = dd
+                #print(df.head())
+                if dfs[dd] is None:
+                    dfs[dd] = df
                 else:
-                    this_df = this_df.append(df)
-        dfs[dlvl] = this_df
-        print(dlvl)
-    print('done reading file')
+                    dfs[dd] = dfs[dd].append(df)
+                #print(len(dfs[dd]))
+            #break
+        #break
     return dfs
 
-def make_fig(col, cat, dfs):
 
+
+
+def make_fig(col, cat, dfs):
     fig, axs = plt.subplots(3, 1, figsize=(12,18))
-    sns.lineplot(x='time', y=col, hue=cat, data=dfs[1], ax=axs[0])
-    axs[0].set_title('(a) detail floating 1 digit, {}'.format(col), loc='left')
-    sns.lineplot(x='time', y=col, hue=cat, data=dfs[2], ax=axs[1])
-    axs[1].set_title('(b) detail floating 2 digit, {}'.format(col), loc='left')
-    sns.lineplot(x='time', y=col, hue=cat, data=dfs[3], ax=axs[2])
-    axs[2].set_title('(c) detail floating 3 digit, {}'.format(col), loc='left')
+    labs = 'abc'
+    for dd, df in dfs.items():
+        #print(df.head())
+        ax = axs[dd-1]
+        #df_sub = df[df['time']==year]
+        sns.lineplot('time', col, hue='prob', hue_order=sorted(list(set(df['prob'].tolist()))), data=df, legend="full", ax=ax)
+        ax.set_title('({}) detail level {}, {}, {}'.format(labs[dd-1], str(dd), cat, col), loc='left')
+        #break
     plt.tight_layout()
 
     fname = 'res_figs/fig_hhstruc_{}_{}.png'.format(cat, col)
+    outdir = os.path.dirname(fname)
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
     plt.savefig(fname, dpi=92, bbox_inches='tight')
     plt.close()
 
 
-def process_one_cat(cat):
-    dfs = process_cat(cat)
+def process_cat(cat, target_file):
+    #cat = 'couple_prob'
+    print('reading file')
+    dfs = get_dfs(cat, target_file)
+
     cols = [ 'type_{}'.format(str(c)) for c in range(7) ]
     for col in cols:
         print('making figure {} {}'.format(cat, col))
         make_fig(col, cat, dfs)
 
+
 if __name__ == '__main__':
+    target_file = 'household_structure_dynamic.csv.xz'
+
     cats = ['couple_prob', 'divorce_prob', 'leaving_prob']
+    #cats = ['divorce_prob', 'leaving_prob']
     for cat in cats:
-        process_one_cat(cat)
+        process_cat(cat, target_file)
+    print('---done---')
