@@ -1,6 +1,6 @@
 # sim-demog-NUK-open
 
-**Important note**: it has become exceedingly difficult to validate extensions to the model using completely synthetic household data. When detecting anomolies, we then have to determine whether it as a model error, or due to the input data. Development of the model has therefore shifted to a private repository using real non-public data.
+**Important note**: it has become exceedingly difficult to validate extensions to the model using completely synthetic household data. When detecting anomolies, we then have to determine whether it is due to a model error, or due to the input data. Development of the model has therefore shifted to a private repository using real non-public data.
 
 ## Background
 
